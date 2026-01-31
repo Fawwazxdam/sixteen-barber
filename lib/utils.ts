@@ -13,3 +13,28 @@ export function idrFormat(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+export function formatIndonesianDate(dateString: string): string {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Jakarta',
+  }).format(date);
+}
+
+export function formatIndonesianDateShort(dateString: string): string {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('id-ID', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Jakarta',
+  }).format(date);
+}

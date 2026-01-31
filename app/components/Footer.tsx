@@ -1,6 +1,7 @@
 "use client";
 
-import { Scissors } from "lucide-react";
+import { LogIn, Scissors, UserCheck } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -25,6 +26,9 @@ export default function Footer() {
                 Est. 1920
               </span>
             </div>
+            <div className="space-y-1 text-amber-200">
+              <p></p>
+            </div>
           </div>
           <div className="text-center">
             <h4 className="font-semibold mb-4 font-playfair">
@@ -47,6 +51,13 @@ export default function Footer() {
           <p className="text-amber-300 italic">
             © 2024 Sixteen Barber. Karena potongan yang baik tidak pernah lekang oleh waktu..
           </p>
+          {/* Hidden admin login link - for internal use only */}
+          <Link
+            href="/login"
+            className="inline-block mt-2 text-amber-500 hover:text-amber-700 text-xs transition-colors"
+          >
+            <LogIn className="inline-block mr-1" /> - <UserCheck className="inline-block mr-1" />
+          </Link>
         </div>
       </div>
     </footer>

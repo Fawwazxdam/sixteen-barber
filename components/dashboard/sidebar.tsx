@@ -8,15 +8,6 @@ import { logout } from "@/lib/api/auth";
 export default function Sidebar({ role }: { role: string }) {
   const router = useRouter();
 
-  async function handleLogout() {
-    try {
-      await logout();
-      router.replace("/login");
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   return (
     <aside className="w-64 bg-amber-900 text-amber-50 hidden md:flex flex-col">
       <div className="p-6 text-2xl font-bold font-playfair">Sixteen Barber</div>
@@ -55,15 +46,6 @@ export default function Sidebar({ role }: { role: string }) {
           </Link>
         )}
       </nav>
-
-      <div className="px-4 pb-4">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-600 bg-red-800 hover:bg-red-900 hover:border-red-700 w-full text-left"
-        >
-          <LogOut size={18} /> Logout
-        </button>
-      </div>
     </aside>
   );
 }
