@@ -13,9 +13,13 @@ const galleryImages = [
   "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=300&h=300&fit=crop&crop=face"
 ];
 
-export default function GallerySection() {
+interface GallerySectionProps {
+  id?: string;
+}
+
+export default function GallerySection({ id }: GallerySectionProps) {
   return (
-    <section className="px-6 py-20 bg-amber-50/50 border-t border-amber-200/30">
+    <section id={id} className="px-6 py-20 bg-amber-50/50 border-t border-amber-200/30">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

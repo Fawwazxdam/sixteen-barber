@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import { Calendar, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  id?: string;
+}
+
+export default function HeroSection({ id }: HeroSectionProps) {
   return (
-    <section className="relative px-6 py-36">
+    <section id={id} className="relative px-6 py-36">
       <div className="mx-auto max-w-7xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

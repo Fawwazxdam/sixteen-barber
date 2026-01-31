@@ -12,10 +12,11 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
+const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
 export const metadata: Metadata = {
-  title: "Sixteen Barber - Premium Barbershop Booking",
-  description: "Book your appointment at Sixteen Barber for the best grooming experience. Classic cuts, modern styles, and exceptional service.",
+  title: `${appName} - Premium Barbershop Booking`,
+  description: `Book your appointment at ${appName} for the best grooming experience. Classic cuts, modern styles, and exceptional service.`,
 };
 
 export default function RootLayout({

@@ -38,3 +38,13 @@ export function formatIndonesianDateShort(dateString: string): string {
     timeZone: 'Asia/Jakarta',
   }).format(date);
 }
+
+
+export function appProfile() {
+  return {
+    "name": process.env.NEXT_PUBLIC_APP_NAME,
+    "email": `${process.env.NEXT_PUBLIC_APP_NAME}@barber.com`,
+    "address": "Jl. Jend. Sudirman No. 123, Jakarta Selatan",
+    "phone": "08123456789",
+  }
+}

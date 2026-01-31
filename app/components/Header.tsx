@@ -3,6 +3,8 @@
 import { Scissors, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
+const appName = process.env.NEXT_PUBLIC_APP_NAME;
+
 export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-linear-to-r from-amber-950 via-amber-900 to-amber-950 backdrop-blur-sm border-b border-amber-200/50 shadow-sm">
@@ -11,7 +13,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Scissors className="h-8 w-8 text-amber-100" />
-            <span className="text-2xl font-bold text-amber-50 font-playfair">Sixteen Barber</span>
+            <span className="text-2xl font-bold text-amber-50 font-playfair">{appName}</span>
           </Link>
 
           {/* Navigation */}

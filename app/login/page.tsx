@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ export default function LoginPage() {
           Login Dashboard
         </h1>
         <p className="text-sm text-amber-700 mb-6">
-          Masuk untuk mengelola Sixteen Barber
+          Masuk untuk mengelola {appName}
         </p>
 
         <div className="space-y-4">

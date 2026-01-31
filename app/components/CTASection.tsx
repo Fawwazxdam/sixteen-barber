@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 
-export default function CTASection() {
+interface CTASectionProps {
+  id?: string;
+}
+
+export default function CTASection({ id }: CTASectionProps) {
   return (
-    <section className="px-6 py-20 bg-linear-to-r from-amber-900 via-amber-800 to-amber-900 relative">
+    <section id={id} className="px-6 py-20 bg-linear-to-r from-amber-900 via-amber-800 to-amber-900 relative">
       <div
         className="absolute inset-0 opacity-10"
         style={{

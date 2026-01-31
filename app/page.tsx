@@ -19,10 +19,10 @@ export default function Home() {
       />
       <Header />
       <BarberPoleAccent />
-      <HeroSection />
-      <ServicesSection />
-      <GallerySection />
-      <CTASection />
+      <HeroSection id="home" />
+      <ServicesSection id="services" />
+      <GallerySection id="gallery" />
+      <CTASection id="contact" />
       <Footer />
     </div>
   );

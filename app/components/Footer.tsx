@@ -2,8 +2,11 @@
 
 import { LogIn, Scissors, UserCheck } from "lucide-react";
 import Link from "next/link";
+import { appProfile } from "@/lib/utils";
 
 export default function Footer() {
+  const profile = appProfile();
+
   return (
     <footer className="bg-linear-to-r from-amber-950 via-amber-900 to-amber-950 text-white px-6 py-12 border-t border-amber-800/50 relative">
       <div
@@ -20,10 +23,10 @@ export default function Footer() {
             <div className="flex items-center justify-center md:justify-start space-x-2 mb-4">
               <Scissors className="h-8 w-8" />
               <span className="text-2xl font-bold text-amber-50 font-playfair">
-                Sixteen Barber
+                {process.env.NEXT_PUBLIC_APP_NAME}
               </span>
               <span className="text-xs text-amber-200 tracking-wide">
-                Est. 1920
+                Est. 2020
               </span>
             </div>
             <div className="space-y-1 text-amber-200">
@@ -41,15 +44,15 @@ export default function Footer() {
           <div className="text-center md:text-right">
             <h4 className="font-semibold mb-4 font-playfair">Kontak</h4>
             <div className="space-y-1 text-amber-200">
-              <p>(555) 123-4567</p>
-              <p>hello@sixteenbarber.com</p>
-              <p>123 Main St, Downtown</p>
+              <p>{profile.phone}</p>
+              <p>{profile.email}</p>
+              <p>{profile.address}</p>
             </div>
           </div>
         </div>
         <div className="border-t border-amber-800/50 pt-8 text-center">
           <p className="text-amber-300 italic">
-            © 2024 Sixteen Barber. Karena potongan yang baik tidak pernah lekang oleh waktu..
+            © 2024 {process.env.NEXT_PUBLIC_APP_NAME}. Karena potongan yang baik tidak pernah lekang oleh waktu..
           </p>
           {/* Hidden admin login link - for internal use only */}
           <Link

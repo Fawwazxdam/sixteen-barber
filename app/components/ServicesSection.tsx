@@ -36,7 +36,11 @@ const getServiceDescription = (name: string, duration: number) => {
   return `Layanan cukur berkualitas selama ${duration} menit`;
 };
 
-export default function ServicesSection() {
+interface ServicesSectionProps {
+  id?: string;
+}
+
+export default function ServicesSection({ id }: ServicesSectionProps) {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +69,7 @@ export default function ServicesSection() {
 
   if (loading) {
     return (
-      <section className="px-6 py-20 bg-white/60 backdrop-blur-sm relative">
+      <section id={id} className="px-6 py-20 bg-white/60 backdrop-blur-sm relative">
         <div className="relative z-10 text-center">
           <p className="text-lg text-amber-700">Memuat layanan...</p>
         </div>
@@ -75,7 +79,7 @@ export default function ServicesSection() {
 
   if (error) {
     return (
-      <section className="px-6 py-20 bg-white/60 backdrop-blur-sm relative">
+      <section id={id} className="px-6 py-20 bg-white/60 backdrop-blur-sm relative">
         <div className="relative z-10 text-center">
           <p className="text-lg text-red-600">
             Kesalahan memuat layanan: {error}
@@ -86,7 +90,7 @@ export default function ServicesSection() {
   }
 
   return (
-    <section className="px-6 py-20 bg-white/60 backdrop-blur-sm relative">
+    <section id={id} className="px-6 py-20 bg-white/60 backdrop-blur-sm relative">
       <div
         className="absolute inset-0 opacity-20"
         style={{
