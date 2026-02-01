@@ -94,6 +94,7 @@ const Booking = () => {
     const fetchSlots = async () => {
       setSlotLoading(true);
 
+      if (!formData.date) return;
       const dateStr = formData.date.toISOString().split("T")[0];
 
       try {

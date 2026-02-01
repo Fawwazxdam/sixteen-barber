@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api/client";
+import { Barber } from "@/types/users";
 
 export default function UsersPage() {
-  const [barbers, setBarbers] = useState<any[]>([]);
+  const [barbers, setBarbers] = useState<Barber[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     apiFetch("/users/barbers")
-      .then(setBarbers)
+      .then((data) => setBarbers(data as Barber[]))
       .finally(() => setLoading(false));
   }, []);
 

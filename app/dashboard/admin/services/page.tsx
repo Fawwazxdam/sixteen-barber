@@ -11,7 +11,7 @@ export default function AdminServicesPage() {
 
   async function load() {
     setLoading(true);
-    const data = await apiFetch("/services");
+    const data = await apiFetch("/services") as Service[];
     setServices(data);
     setLoading(false);
   }

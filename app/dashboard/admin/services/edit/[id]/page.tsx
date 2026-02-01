@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api/client";
+import { Service } from "@/types/services";
 
 export default function EditServicePage() {
   const { id } = useParams<{ id: string }>();
@@ -18,8 +19,8 @@ export default function EditServicePage() {
 
   useEffect(() => {
     async function fetchService() {
-      const data = await apiFetch(`/services`);
-      const service = data.find((s: any) => s.id === id);
+      const data = await apiFetch(`/services`) as Service[];
+      const service = data.find((s: Service) => s.id === id);
 
       if (!service) {
         router.push("/dashboard/admin/services");

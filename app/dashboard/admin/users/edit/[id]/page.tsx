@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api/client";
+import { Barber } from "@/types/users";
 
 export default function EditBarberPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,8 +16,12 @@ export default function EditBarberPage() {
 
   useEffect(() => {
     apiFetch("/users/barbers").then((data) => {
-      const barber = data.find((b: any) => b.id === id);
-      if (!barber) router.push("/dashboard/admin/users");
+      const barbers = data as Barber[];
+      const barber = barbers.find((b: Barber) => b.id === id);
+      if (!barber) {
+        router.push("/dashboard/admin/users");
+        return;
+      }
       setForm({ name: barber.name, password: "" });
     });
   }, [id, router]);
