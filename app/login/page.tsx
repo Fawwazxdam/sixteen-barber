@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/auth";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,7 +23,11 @@ export default function LoginPage() {
       toast.success("Login berhasil");
       router.push("/dashboard");
     } catch (err: any) {
-      toast.error(err.message || "Login gagal");
+      if (axios.isAxiosError(err)) {
+        toast.error(err.response?.data?.message || "Login gagal");
+      } else {
+        toast.error(err.message || "Login gagal");
+      }
     } finally {
       setLoading(false);
     }

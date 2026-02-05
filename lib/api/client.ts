@@ -1,4 +1,6 @@
-// lib/api/client.ts - versi improved
+import axios, { AxiosRequestConfig } from "axios";
+import { serialize } from "cookie";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
 export class ApiError extends Error {
@@ -11,43 +13,44 @@ export class ApiError extends Error {
   }
 }
 
+export const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export async function apiFetch<T>(
   endpoint: string,
-  options: RequestInit & { cookieHeader?: string } = {}
+  options: AxiosRequestConfig & { cookieHeader?: string } = {}
 ): Promise<T> {
-  const { headers, cookieHeader, ...rest } = options;
+  const { headers, cookieHeader, ...config } = options;
 
   try {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...rest,
-      credentials: "include",
+    const response = await apiClient({
+      url: endpoint,
+      ...config,
       headers: {
-        "Content-Type": "application/json",
         ...(cookieHeader && { Cookie: cookieHeader }),
         ...headers,
       },
-      cache: "no-store",
     });
 
-    // Handle non-OK responses
-    if (!res.ok) {
-      const error = await res.json().catch(() => ({ message: res.statusText }));
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status ?? 0;
+      const message = error.response?.data?.message || error.message || "API Error";
+      const data = error.response?.data;
 
       // Auto redirect on 401
-      if (res.status === 401 && typeof window !== "undefined") {
+      if (status === 401 && typeof window !== "undefined") {
         window.location.href = "/login";
       }
 
-      throw new ApiError(
-        error.message || "API Error",
-        res.status,
-        error
-      );
+      throw new ApiError(message, status, data);
     }
-
-    return res.json();
-  } catch (error) {
-    if (error instanceof ApiError) throw error;
     throw new ApiError("Network error", 0);
   }
 }

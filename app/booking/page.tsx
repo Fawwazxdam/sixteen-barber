@@ -11,6 +11,7 @@ import Textarea from "../components/ui/Textarea";
 import { idrFormat } from "../../lib/utils";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
+import axios from "axios";
 import "react-day-picker/dist/style.css";
 
 interface Service {
@@ -56,19 +57,12 @@ const Booking = () => {
     const fetchData = async () => {
       try {
         const [servicesResponse, barbersResponse] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/services`),
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/barbers`),
+          axios.get<Service[]>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/services`),
+          axios.get<Barber[]>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/barbers`),
         ]);
 
-        if (!servicesResponse.ok) {
-          throw new Error("Failed to fetch services");
-        }
-        if (!barbersResponse.ok) {
-          throw new Error("Failed to fetch barbers");
-        }
-
-        const servicesData: Service[] = await servicesResponse.json();
-        const barbersData: Barber[] = await barbersResponse.json();
+        const servicesData = servicesResponse.data;
+        const barbersData = barbersResponse.data;
 
         const activeServices = servicesData.filter(
           (service) => service.isActive,
@@ -98,14 +92,11 @@ const Booking = () => {
       const dateStr = formData.date.toISOString().split("T")[0];
 
       try {
-        const res = await fetch(
+        const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings/available-slots?date=${dateStr}&barberId=${formData.barber}`,
         );
 
-        if (!res.ok) throw new Error("Gagal mengambil slot");
-
-        const data = await res.json();
-        setAvailableSlots(data);
+        setAvailableSlots(res.data);
       } catch (err) {
         toast.error("Gagal memuat slot waktu");
         setAvailableSlots([]);
@@ -156,23 +147,11 @@ const Booking = () => {
     setSubmitting(true);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        },
+        payload,
       );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP ${response.status}`);
-      }
-
-      const result = await response.json();
       toast.success("Pesanan berhasil dibuat!");
       // Reset form
       setFormData({
@@ -186,9 +165,15 @@ const Booking = () => {
       });
       router.push("/");
     } catch (err) {
-      toast.error(
-        `Kesalahan: ${err instanceof Error ? err.message : "Kesalahan tidak diketahui"}`,
-      );
+      if (axios.isAxiosError(err)) {
+        toast.error(
+          `Kesalahan: ${err.response?.data?.message || err.message}`,
+        );
+      } else {
+        toast.error(
+          `Kesalahan: ${err instanceof Error ? err.message : "Kesalahan tidak diketahui"}`,
+        );
+      }
     } finally {
       setSubmitting(false);
     }

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Scissors, Star, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { idrFormat } from "../../lib/utils";
+import axios from "axios";
 
 interface Service {
   id: string;
@@ -48,14 +49,10 @@ export default function ServicesSection({ id }: ServicesSectionProps) {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get<Service[]>(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/services`,
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch services");
-        }
-        const data: Service[] = await response.json();
-        const activeServices = data.filter((service) => service.isActive);
+        const activeServices = response.data.filter((service) => service.isActive);
         setServices(activeServices);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
