@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { serialize } from "cookie";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
@@ -21,16 +20,23 @@ export const apiClient = axios.create({
   },
 });
 
+interface ApiFetchOptions extends AxiosRequestConfig {
+  cookieHeader?: string;
+  body?: any;
+  credentials?: "include" | "omit" | "same-origin";
+}
+
 export async function apiFetch<T>(
   endpoint: string,
-  options: AxiosRequestConfig & { cookieHeader?: string } = {}
+  options: ApiFetchOptions = {}
 ): Promise<T> {
-  const { headers, cookieHeader, ...config } = options;
+  const { headers, cookieHeader, body, ...config } = options;
 
   try {
     const response = await apiClient({
       url: endpoint,
       ...config,
+      data: body || config.data,
       headers: {
         ...(cookieHeader && { Cookie: cookieHeader }),
         ...headers,
