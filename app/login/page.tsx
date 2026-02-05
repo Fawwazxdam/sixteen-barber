@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/auth";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { setCookie } from "@/lib/utils/cookies";
+import { setCookie, getCookie } from "@/lib/utils/cookies";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,17 +19,30 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      console.log("[Login] Attempting login...");
       const res = await login({ email, password });
+      console.log("[Login] Response keys:", Object.keys(res || {}));
+      console.log("[Login] Response:", JSON.stringify(res, null, 2));
+      console.log("[Login] document.cookie before set:", document.cookie);
 
-      // Set cookie manual jika response ada accessToken
-      if (res.accessToken) {
+      // Set cookie manual jika response ada accessToken (token-based auth)
+      if (res && res.accessToken) {
+        console.log("[Login] Setting accessToken cookie (token-based)...");
         setCookie("accessToken", res.accessToken, 7);
+      } else {
+        console.log("[Login] No accessToken in response - checking cookies...");
       }
+
+      // Check cookies untuk verify
+      console.log("[Login] All cookies after:", document.cookie);
 
       toast.success("Login berhasil");
       router.push("/dashboard");
     } catch (err: any) {
+      console.error("[Login] Error:", err);
       if (axios.isAxiosError(err)) {
+        console.error("[Login] Response headers:", err.response?.headers);
+        console.error("[Login] Set-Cookie header:", err.response?.headers?.["set-cookie"]);
         toast.error(err.response?.data?.message || "Login gagal");
       } else {
         toast.error(err.message || "Login gagal");
