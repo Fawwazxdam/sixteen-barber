@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/auth";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { setCookie } from "@/lib/utils/cookies";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,6 +20,11 @@ export default function LoginPage() {
 
     try {
       const res = await login({ email, password });
+
+      // Set cookie manual jika response ada accessToken
+      if (res.accessToken) {
+        setCookie("accessToken", res.accessToken, 7);
+      }
 
       toast.success("Login berhasil");
       router.push("/dashboard");
