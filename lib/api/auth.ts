@@ -7,44 +7,27 @@ export interface MeResponse {
   role: "ADMIN" | "BARBER";
 }
 
-export interface LoginResponse {
-  success: boolean;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-  };
-}
-
 export async function login(data: { email: string; password: string }) {
-  // Return type ubah jadi generic object karena token ada di cookie
-  return apiFetch<{ success: boolean; message: string }>("/auth/login", {
+  return apiFetch<{ success: boolean }>("/auth/login", {
     method: "POST",
     body: JSON.stringify(data),
-    // Credentials include SANGAT PENTING agar browser mau menerima Set-Cookie
-    credentials: "include", 
+  });
+}
+
+export async function refreshToken() {
+  return apiFetch<{ success: boolean }>("/auth/refresh", {
+    method: "POST",
   });
 }
 
 export async function getMe(cookieHeader?: string) {
   return apiFetch<MeResponse>("/auth/me", {
-    // Pass cookie header jika dipanggil dari Server Component
-    cookieHeader, 
+    cookieHeader, // Pass ke apiFetch
   });
 }
 
-export async function logout(): Promise<{ message: string }> {
+export async function logout() {
   return apiFetch("/auth/logout", {
     method: "POST",
-    credentials: "include",
-  });
-}
-
-// ✅ Function untuk refresh access token
-export async function refreshToken(): Promise<{ success: boolean }> {
-  return apiFetch<{ success: boolean }>("/auth/refresh", {
-    method: "POST",
-    credentials: "include",
   });
 }
