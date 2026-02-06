@@ -16,7 +16,6 @@ export default function CreateBarberPage() {
     e.preventDefault();
 
     await apiFetch("/users/barbers", {
-      credentials: "include",
       method: "POST",
       body: JSON.stringify(form),
     });

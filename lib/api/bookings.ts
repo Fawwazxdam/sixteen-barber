@@ -11,10 +11,7 @@ export type Booking = {
 
 export async function getBarberBookings(date: string, barberId: string) {
   return apiFetch<Booking[]>(
-    `/bookings/barber?date=${date}&barberId=${barberId}`, // ✅ sesuai backend
-    {
-      credentials: "include",
-    }
+    `/bookings/barber?date=${date}&barberId=${barberId}`
   );
 }
 
@@ -22,9 +19,8 @@ export async function updateBookingStatus(
   id: string, // ✅ ubah jadi string sesuai backend
   status: "pending" | "completed" | "cancelled"
 ) {
-  return apiFetch<Booking>(`/bookings/${id}/status`, { // ✅ sesuai backend
+  return apiFetch<Booking>(`/bookings/${id}/status`, {
     method: "PATCH",
-    credentials: "include",
     body: JSON.stringify({ status }),
   });
 }
