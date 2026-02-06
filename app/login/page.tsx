@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/auth";
 import toast from "react-hot-toast";
-import axios from "axios";
-import { setCookie, getCookie } from "@/lib/utils/cookies";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,34 +17,19 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      console.log("[Login] Attempting login...");
-      const res = await login({ email, password });
-      console.log("[Login] Response keys:", Object.keys(res || {}));
-      console.log("[Login] Response:", JSON.stringify(res, null, 2));
-      console.log("[Login] document.cookie before set:", document.cookie);
-
-      // Set cookie manual jika response ada accessToken (token-based auth)
-      if (res && res.accessToken) {
-        console.log("[Login] Setting accessToken cookie (token-based)...");
-        setCookie("accessToken", res.accessToken, 7);
-      } else {
-        console.log("[Login] No accessToken in response - checking cookies...");
-      }
-
-      // Check cookies untuk verify
-      console.log("[Login] All cookies after:", document.cookie);
-
+      // Backend akan otomatis men-set cookie di browser melalui header 'Set-Cookie'
+      // Kita TIDAK PERLU melakukan apa-apa dengan token disini.
+      await login({ email, password });
+      
       toast.success("Login berhasil");
+      
+      // Refresh router agar Middleware/Server Components mendeteksi cookie baru
+      router.refresh(); 
       router.push("/dashboard");
+      
     } catch (err: any) {
       console.error("[Login] Error:", err);
-      if (axios.isAxiosError(err)) {
-        console.error("[Login] Response headers:", err.response?.headers);
-        console.error("[Login] Set-Cookie header:", err.response?.headers?.["set-cookie"]);
-        toast.error(err.response?.data?.message || "Login gagal");
-      } else {
-        toast.error(err.message || "Login gagal");
-      }
+      toast.error(err.response?.data?.message || "Login gagal");
     } finally {
       setLoading(false);
     }
@@ -74,7 +57,6 @@ export default function LoginPage() {
             required
             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-700"
           />
-
           <input
             type="password"
             placeholder="Password"
@@ -83,7 +65,6 @@ export default function LoginPage() {
             required
             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-700"
           />
-
           <button
             type="submit"
             disabled={loading}
