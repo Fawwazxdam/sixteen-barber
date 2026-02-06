@@ -12,10 +12,10 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value; // ✅ ambil cookie
   
-  // if (!token) redirect("/login");
+  if (!token) redirect("/login");
 
-  const cookieHeader = `access_token=${token}`; // ✅ format cookie header
-  const me = await getMe(cookieHeader); // ✅ kirim ke backend
+  // const cookieHeader = `access_token=${token}`; // ✅ format cookie header
+  const me = await getMe(); // ✅ kirim ke backend
 
   return (
     <div className="flex min-h-screen bg-amber-50">
