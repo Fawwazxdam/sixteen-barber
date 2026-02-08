@@ -24,9 +24,9 @@ export default async function DashboardLayout({
     const me = await getMe(cookieHeader); // Pass cookieHeader ke getMe
     return (
       <div className="flex min-h-screen bg-amber-50">
-        <Sidebar role={me.role} />
+        <Sidebar role={me.user.role} />
         <div className="flex flex-col flex-1">
-          <Topbar user={me} />
+          <Topbar user={me.user} />
           <main className="p-6">{children}</main>
         </div>
       </div>

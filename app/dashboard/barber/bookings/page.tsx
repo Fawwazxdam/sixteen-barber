@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Calendar, Grid, List, Clock, User, Scissors } from "lucide-react";
 
-type BookingStatus = "pending" | "completed" | "cancelled";
+type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled";
 
 export default function BarberBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -35,14 +35,16 @@ export default function BarberBookings() {
   const [loading, setLoading] = useState(false);
 
   const [barberId, setBarberId] = useState<string>("");
+  console.log({bookings})
 
   const fetchBookings = async () => {
     if (!barberId) return;
 
     setLoading(true);
     try {
-      const data = await getBarberBookings(date, barberId);
-      setBookings(data);
+      const response = await getBarberBookings(date, barberId);
+      const bookingsData = (response as any)?.data || response;
+      setBookings(Array.isArray(bookingsData) ? bookingsData : []);
     } catch (err: any) {
       toast.error(err.message || "Gagal memuat booking");
     } finally {
@@ -50,9 +52,9 @@ export default function BarberBookings() {
     }
   };
 
-  const updateStatus = async (id: number, status: BookingStatus) => {
+  const updateStatus = async (id: string, status: BookingStatus) => {
     try {
-      await updateBookingStatus(String(id), status);
+      await updateBookingStatus(id, status);
 
       setBookings((prev) =>
         prev.map((b) => (b.id === id ? { ...b, status } : b))
@@ -81,6 +83,8 @@ export default function BarberBookings() {
     switch (status) {
       case "pending":
         return "Menunggu";
+      case "confirmed":
+        return "Dikonfirmasi";
       case "completed":
         return "Selesai";
       case "cancelled":
@@ -95,8 +99,8 @@ export default function BarberBookings() {
       try {
         const { getMe } = await import("@/lib/api/auth");
         const user = await getMe();
-        if (user.role === "BARBER") {
-          setBarberId(user.id);
+        if (user.user.role === "BARBER") {
+          setBarberId(user.user.id);
         }
       } catch (err) {
         console.error(err);
@@ -197,6 +201,9 @@ export default function BarberBookings() {
                         {getStatusLabel(b.status as BookingStatus)}
                       </span>
                     </div>
+                    <div className="text-sm text-muted-foreground">
+                      {b.customerPhone}
+                    </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
                       <span>{formatIndonesianDateShort(b.bookingDate)}</span>
@@ -211,11 +218,12 @@ export default function BarberBookings() {
                       updateStatus(b.id, value as BookingStatus)
                     }
                   >
-                    <SelectTrigger className="w-[140px]">
+                    <SelectTrigger className="w-36">
                       <SelectValue placeholder="Pilih status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="pending">Menunggu</SelectItem>
+                      <SelectItem value="confirmed">Dikonfirmasi</SelectItem>
                       <SelectItem value="completed">Selesai</SelectItem>
                       <SelectItem value="cancelled">Dibatalkan</SelectItem>
                     </SelectContent>
@@ -246,6 +254,9 @@ export default function BarberBookings() {
               </CardHeader>
               <CardContent className="flex-1 space-y-3">
                 <div className="space-y-2 text-sm">
+                  <div className="text-muted-foreground">
+                    {b.customerPhone}
+                  </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Clock className="h-4 w-4" />
                     <span>{formatIndonesianDateShort(b.bookingDate)}</span>
@@ -266,6 +277,7 @@ export default function BarberBookings() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="pending">Menunggu</SelectItem>
+                    <SelectItem value="confirmed">Dikonfirmasi</SelectItem>
                     <SelectItem value="completed">Selesai</SelectItem>
                     <SelectItem value="cancelled">Dibatalkan</SelectItem>
                   </SelectContent>

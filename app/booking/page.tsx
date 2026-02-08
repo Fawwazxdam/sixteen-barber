@@ -51,14 +51,19 @@ const Booking = () => {
     { start: string; end: string }[]
   >([]);
 
+  console.log({availableSlots})
   const [slotLoading, setSlotLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [servicesResponse, barbersResponse] = await Promise.all([
-          axios.get<Service[]>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/services`),
-          axios.get<Barber[]>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/barbers`),
+          axios.get<Service[]>(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/services`,
+          ),
+          axios.get<Barber[]>(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/barbers`,
+          ),
         ]);
 
         const servicesData = servicesResponse.data;
@@ -96,7 +101,8 @@ const Booking = () => {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings/available-slots?date=${dateStr}&barberId=${formData.barber}`,
         );
 
-        setAvailableSlots(res.data);
+        const slots = res.data?.data || res.data || [];
+        setAvailableSlots(Array.isArray(slots) ? slots : []);
       } catch (err) {
         toast.error("Gagal memuat slot waktu");
         setAvailableSlots([]);
@@ -153,22 +159,17 @@ const Booking = () => {
       );
 
       toast.success("Pesanan berhasil dibuat!");
-      // Reset form
-      setFormData({
-        name: "",
-        phone: "",
-        barber: "",
-        service: "",
-        date: undefined,
-        time: "09:00",
-        message: "",
-      });
-      router.push("/");
+      // Handle both direct response and wrapped response { status, data }
+      const responseData = response.data.data || response.data;
+      const bookingId = responseData?.id || responseData?.booking?.id;
+      if (bookingId) {
+        router.push(`/booking/success?id=${bookingId}`);
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        toast.error(
-          `Kesalahan: ${err.response?.data?.message || err.message}`,
-        );
+        toast.error(`Kesalahan: ${err.response?.data?.message || err.message}`);
       } else {
         toast.error(
           `Kesalahan: ${err instanceof Error ? err.message : "Kesalahan tidak diketahui"}`,
@@ -206,7 +207,7 @@ const Booking = () => {
         <div className="mx-auto px-6">
           <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-8 border border-amber-200/50">
             <h1 className="text-3xl font-bold mb-8 text-center text-amber-900 font-playfair">
-              Pesan Janji Temu Anda
+              Booking Kursimu
             </h1>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -352,10 +353,10 @@ const Booking = () => {
               <Button
                 type="submit"
                 variant="default"
-                className="w-full text-lg py-3"
+                className="w-full text-lg py-3 bg-amber-700 hover:bg-amber-800 text-white rounded-lg font-medium"
                 disabled={submitting}
               >
-                {submitting ? "Membuat Pesanan..." : "Pesan Janji Temu"}
+                {submitting ? "Membuat Booking..." : "Booking Kursimu"}
               </Button>
             </form>
           </div>

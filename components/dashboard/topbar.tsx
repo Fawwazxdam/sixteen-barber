@@ -9,8 +9,8 @@ import { LogOut, User, ChevronDown } from "lucide-react";
 
 interface User {
   id: string;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   role: "ADMIN" | "BARBER";
 }
 
@@ -54,11 +54,11 @@ export default function Topbar({ user }: { user: User }) {
           className="flex items-center gap-3 hover:bg-gray-100 transition-colors px-2 py-1.5 rounded-lg"
         >
           <div className="text-sm text-right hidden sm:block">
-            <p className="font-medium text-gray-900">{user.name}</p>
+            <p className="font-medium text-gray-900">{user.name || "User"}</p>
             <p className="text-xs text-gray-500">{user.role}</p>
           </div>
           <div className="h-9 w-9 rounded-full bg-amber-800 text-white flex items-center justify-center font-medium">
-            {user.name[0]}
+            {(user.name || "U").charAt(0).toUpperCase()}
           </div>
           <ChevronDown
             className={`h-4 w-4 text-gray-500 transition-transform ${
@@ -70,8 +70,8 @@ export default function Topbar({ user }: { user: User }) {
         {isOpen && (
           <Card className="absolute right-0 mt-2 w-48 py-2 shadow-lg animate-in fade-in zoom-in-95 duration-100">
             <div className="px-3 py-2 border-b">
-              <p className="font-medium text-sm">{user.name}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="font-medium text-sm">{user.name || "User"}</p>
+              <p className="text-xs text-muted-foreground">{user.email || "No email"}</p>
             </div>
             <Button
               variant="ghost"

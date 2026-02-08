@@ -1,9 +1,266 @@
-import React from 'react'
+"use client";
 
-const page = () => {
-  return (
-    <div>page</div>
-  )
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { Button } from "../../../components/ui/button";
+import { getBooking } from "../../../lib/api/bookings";
+import { idrFormat } from "../../../lib/utils";
+import { CheckCircle, Calendar, Clock, User, Phone, Scissors } from "lucide-react";
+
+interface BookingDetails {
+  id: string;
+  barberId: string;
+  serviceId: string;
+  serviceName: string;
+  customerName: string;
+  customerPhone: string;
+  customerNote: string | null;
+  bookingDate: string;
+  status: "pending" | "completed" | "cancelled";
+  duration: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export default page
+export default function BookingSuccessPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const bookingId = searchParams.get("id");
+
+  const [booking, setBooking] = useState<BookingDetails | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  console.log("Booking data aseli:", booking);
+
+  useEffect(() => {
+    if (!bookingId) {
+      setError("Booking ID tidak ditemukan");
+      setLoading(false);
+      return;
+    }
+
+    const fetchBooking = async () => {
+      try {
+        const data = await getBooking(bookingId);
+        // Handle wrapped response { status, data }
+        const bookingData = (data as any)?.data || data;
+        console.log("Booking response:", bookingData);
+        setBooking(bookingData as BookingDetails);
+      } catch (err) {
+        console.error("Error fetching booking:", err);
+        setError("Gagal memuat detail booking");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooking();
+  }, [bookingId]);
+
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "Tanggal tidak tersedia";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      const isoDate = dateString.replace(" ", "T");
+      const parsedDate = new Date(isoDate);
+      if (isNaN(parsedDate.getTime())) {
+        return "Tanggal tidak tersedia";
+      }
+      return parsedDate.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+    return date.toLocaleDateString("id-ID", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (dateString: string | undefined) => {
+    if (!dateString) return "Jam tidak tersedia";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      const isoDate = dateString.replace(" ", "T");
+      const parsedDate = new Date(isoDate);
+      if (isNaN(parsedDate.getTime())) {
+        return "Jam tidak tersedia";
+      }
+      return parsedDate.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+    return date.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-700 mx-auto mb-4"></div>
+          <p className="text-amber-800">Memuat detail booking...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !booking) {
+    return (
+      <div className="min-h-screen bg-amber-50">
+        <Header />
+        <main className="pt-24 pb-12 px-6">
+          <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">❌</span>
+            </div>
+            <h1 className="text-2xl font-bold text-red-700 mb-2">
+              Terjadi Kesalahan
+            </h1>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <Button
+              onClick={() => router.push("/booking")}
+              className="bg-amber-700 hover:bg-amber-800"
+            >
+              Kembali ke Booking
+            </Button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-amber-50 via-yellow-50 to-orange-100">
+      <Header />
+
+      <main className="pt-24 pb-12 px-6">
+        <div className="max-w-lg mx-auto">
+          {/* Success Header */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8 mb-6 text-center border border-amber-200/50">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-green-700 mb-2 font-playfair">
+              Booking Berhasil!
+            </h1>
+            <p className="text-amber-700">
+              Terima kasih, {booking.customerName}! Booking kamu telah kami
+              terima.
+            </p>
+          </div>
+
+          {/* Booking Details */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-amber-200/50">
+            <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Detail Booking
+            </h2>
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-3 border-b border-amber-100">
+                <span className="text-gray-600">ID Booking</span>
+                <span className="font-mono text-sm text-amber-800">
+                  #{booking.id?.slice(0, 8) || booking.id || "N/A"}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-amber-100">
+                <span className="text-gray-600 flex items-center gap-2">
+                  <User className="w-4 h-4" /> Nama
+                </span>
+                <span className="font-medium text-amber-900">
+                  {booking.customerName}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-amber-100">
+                <span className="text-gray-600 flex items-center gap-2">
+                  <Phone className="w-4 h-4" /> Telepon
+                </span>
+                <span className="font-medium text-amber-900">
+                  {booking.customerPhone}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-amber-100">
+                <span className="text-gray-600 flex items-center gap-2">
+                  <Scissors className="w-4 h-4" /> Layanan
+                </span>
+                <span className="font-medium text-amber-900">
+                  {booking.serviceName}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-amber-100">
+                <span className="text-gray-600 flex items-center gap-2">
+                  <Calendar className="w-4 h-4" /> Tanggal
+                </span>
+                <span className="font-medium text-amber-900">
+                  {formatDate(booking.bookingDate)}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-amber-100">
+                <span className="text-gray-600 flex items-center gap-2">
+                  <Clock className="w-4 h-4" /> Jam
+                </span>
+                <span className="font-medium text-amber-900">
+                  {formatTime(booking.bookingDate)} ({booking.duration} menit)
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3">
+                <span className="text-gray-600">Status</span>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    booking.status === "pending"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : booking.status === "completed"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {booking.status === "pending"
+                    ? "Menunggu Konfirmasi"
+                    : booking.status === "completed"
+                    ? "Selesai"
+                    : "Dibatalkan"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-6 flex gap-4">
+            <Button
+              onClick={() => router.push("/")}
+              className="flex-1 bg-amber-700 hover:bg-amber-800"
+            >
+              Kembali ke Beranda
+            </Button>
+            <Button
+              onClick={() => router.push("/booking")}
+              variant="outline"
+              className="flex-1 border-amber-700 text-amber-700 hover:bg-amber-50"
+            >
+              Booking Lagi
+            </Button>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

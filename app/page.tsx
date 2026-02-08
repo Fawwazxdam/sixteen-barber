@@ -1,5 +1,6 @@
 import HeroSection from "./components/HeroSection";
 import ServicesSection from "./components/ServicesSection";
+import CrewSection from "./components/CrewSection";
 import GallerySection from "./components/GallerySection";
 import CTASection from "./components/CTASection";
 import Footer from "./components/Footer";
@@ -21,6 +22,7 @@ export default function Home() {
       <BarberPoleAccent />
       <HeroSection id="home" />
       <ServicesSection id="services" />
+      <CrewSection id="crew" />
       <GallerySection id="gallery" />
       <CTASection id="contact" />
       <Footer />

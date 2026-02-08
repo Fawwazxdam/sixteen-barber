@@ -20,13 +20,15 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#home" className="text-white/90 hover:text-amber-600 transition-colors font-medium">Beranda</a>
             <a href="#services" className="text-white/90 hover:text-amber-600 transition-colors font-medium">Layanan</a>
+            <a href="#crew" className="text-white/90 hover:text-amber-600 transition-colors font-medium">Crew</a>
             <a href="#gallery" className="text-white/90 hover:text-amber-600 transition-colors font-medium">Galeri</a>
             <a href="#contact" className="text-white/90 hover:text-amber-600 transition-colors font-medium">Kontak</a>
+            <Link href="/cek-booking" className="text-white/90 hover:text-amber-600 transition-colors font-medium">Cek Booking</Link>
           </nav>
 
           {/* CTA Button */}
           <Link
-            href="/bookking"
+            href="/booking"
             className="flex items-center space-x-2 bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-lg transition-colors font-medium"
           >
             <Calendar className="h-4 w-4" />

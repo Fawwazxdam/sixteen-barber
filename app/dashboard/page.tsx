@@ -10,8 +10,8 @@ export default function DashboardPage() {
   useEffect(() => {
     getMe() // axios / fetch withCredentials: true
       .then((me) => {
-        if (me.role === "ADMIN") router.replace("/dashboard/admin");
-        else if (me.role === "BARBER") router.replace("/dashboard/barber");
+        if (me.user.role === "ADMIN") router.replace("/dashboard/admin");
+        else if (me.user.role === "BARBER") router.replace("/dashboard/barber");
         else router.replace("/login");
       })
       .catch(() => {

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/auth";
 import toast from "react-hot-toast";
-import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,11 +16,12 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await login({ email, password }); // BE sudah set cookies
+      await login({ email, password });
       toast.success("Login berhasil");
       router.push("/dashboard");
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Login gagal");
+      const message = err.response?.data?.message || err.message || "Login gagal";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -29,9 +29,16 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-amber-50">
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-amber-900 mb-2 font-playfair">Login Dashboard</h1>
-        <p className="text-sm text-amber-700 mb-6">Masuk untuk mengelola {appName}</p>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white rounded-xl shadow-lg p-8"
+      >
+        <h1 className="text-2xl font-bold text-amber-900 mb-2 font-playfair">
+          Login Dashboard
+        </h1>
+        <p className="text-sm text-amber-700 mb-6">
+          Masuk untuk mengelola {appName}
+        </p>
         <div className="space-y-4">
           <input
             type="email"
