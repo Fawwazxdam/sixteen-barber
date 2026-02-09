@@ -14,12 +14,10 @@ export class ApiError extends Error {
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true,
 });
 
 interface ApiFetchOptions extends AxiosRequestConfig {
   body?: any;
-  cookieHeader?: string;
   multipart?: boolean;
 }
 
@@ -27,11 +25,10 @@ export async function apiFetch<T>(
   endpoint: string,
   options: ApiFetchOptions = {}
 ): Promise<T> {
-  const { body, cookieHeader, multipart, ...config } = options;
+  const { body, multipart, ...config } = options;
 
   // Build headers
   const headers: Record<string, string> = {
-    ...(cookieHeader ? { Cookie: cookieHeader } : {}),
     ...config.headers as Record<string, string>,
   };
 
@@ -48,6 +45,7 @@ export async function apiFetch<T>(
       method: config.method || "GET",
       data: body || config.data,
       headers,
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {

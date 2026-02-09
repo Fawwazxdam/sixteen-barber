@@ -9,19 +9,8 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
-  const refreshToken = cookieStore.get("refresh_token")?.value; // Jika perlu untuk refresh
-
-  if (!accessToken) {
-    redirect("/login");
-  }
-
-  // Buat cookie header manual untuk dikirim ke API (server-side)
-  const cookieHeader = `access_token=${accessToken}${refreshToken ? `; refresh_token=${refreshToken}` : ""}`;
-
   try {
-    const me = await getMe(cookieHeader); // Pass cookieHeader ke getMe
+    const me = await getMe();
     return (
       <div className="flex min-h-screen bg-amber-50">
         <Sidebar role={me.user.role} />
@@ -32,7 +21,7 @@ export default async function DashboardLayout({
       </div>
     );
   } catch (error) {
-    // Jika getMe gagal (e.g., 401), redirect ke login
+    // If getMe fails (e.g., 401), redirect to login
     console.error("Error fetching user:", error);
     redirect("/login");
   }

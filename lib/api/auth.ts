@@ -26,10 +26,8 @@ export async function login(data: { email: string; password: string }) {
   });
 }
 
-export async function getMe(cookieHeader?: string) {
-  return apiFetch<MeResponse>("/auth/me", {
-    cookieHeader,
-  });
+export async function getMe() {
+  return apiFetch<MeResponse>("/auth/me");
 }
 
 export async function logout() {
