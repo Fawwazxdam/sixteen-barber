@@ -1,31 +1,29 @@
 import { apiFetch } from "./client";
+import { Service } from "@/types/services";
 
-export function getServices() {
-  return apiFetch("/services");
+export async function getServices() {
+  return apiFetch<Service[]>("/services");
 }
 
-export function createService(data: {
+export async function createService(data: {
   name: string;
   price: number;
   duration: number;
 }) {
-  return apiFetch("/services", {
+  return apiFetch<Service>("/services", {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-export function updateService(
-  id: string,
-  data: any
-) {
-  return apiFetch(`/services/${id}`, {
-    method: "PUT",
+export async function updateService(id: string, data: Partial<Service>) {
+  return apiFetch<Service>(`/services/${id}`, {
+    method: "PATCH",
     body: JSON.stringify(data),
   });
 }
 
-export function deleteService(id: string) {
+export async function deleteService(id: string) {
   return apiFetch(`/services/${id}`, {
     method: "DELETE",
   });

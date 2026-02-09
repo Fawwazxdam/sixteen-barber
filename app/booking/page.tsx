@@ -50,8 +50,6 @@ const Booking = () => {
   const [availableSlots, setAvailableSlots] = useState<
     { start: string; end: string }[]
   >([]);
-
-  console.log({availableSlots})
   const [slotLoading, setSlotLoading] = useState(false);
 
   useEffect(() => {
