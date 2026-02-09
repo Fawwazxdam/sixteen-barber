@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -24,7 +24,7 @@ interface BookingDetails {
   updatedAt: string;
 }
 
-export default function BookingSuccessPage() {
+function BookingSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bookingId = searchParams.get("id");
@@ -32,7 +32,6 @@ export default function BookingSuccessPage() {
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  console.log("Booking data aseli:", booking);
 
   useEffect(() => {
     if (!bookingId) {
@@ -46,7 +45,6 @@ export default function BookingSuccessPage() {
         const data = await getBooking(bookingId);
         // Handle wrapped response { status, data }
         const bookingData = (data as any)?.data || data;
-        console.log("Booking response:", bookingData);
         setBooking(bookingData as BookingDetails);
       } catch (err) {
         console.error("Error fetching booking:", err);
@@ -262,5 +260,22 @@ export default function BookingSuccessPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-700 mx-auto mb-4"></div>
+            <p className="text-amber-800">Memuat...</p>
+          </div>
+        </div>
+      }
+    >
+      <BookingSuccessContent />
+    </Suspense>
   );
 }
