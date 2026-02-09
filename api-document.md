@@ -174,16 +174,44 @@ Toggle the active status of a service. (Requires ADMIN role)
 #### POST /users/barbers
 Create a new barber. (Requires ADMIN role)
 
-**Request Body:**
+**Content-Type:** `multipart/form-data`
+
+**Request Fields:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| email | string | Yes | Barber's email address |
+| name | string | Yes | Barber's name |
+| password | string | Yes | Password (min 6 characters) |
+| image | File | No | Barber's photo |
+
+**Response:** User object with media
 ```json
 {
-  "email": "string",
+  "id": "uuid",
   "name": "string",
-  "password": "string" // min 6 characters
+  "email": "string",
+  "role": "BARBER",
+  "image": "string?",
+  "media": {
+    "id": "uuid",
+    "type": "barber",
+    "referenceId": "uuid",
+    "url": "/uploads/filename.jpg",
+    "createdAt": "timestamp"
+  },
+  "createdAt": "timestamp"
 }
 ```
 
-**Response:** User object (barber)
+**Example:**
+```bash
+curl -X POST http://localhost:4000/users/barbers \
+  -H "Authorization: Bearer <token>" \
+  -F "email=barber@example.com" \
+  -F "name=John Doe" \
+  -F "password=password123" \
+  -F "image=@photo.jpg"
+```
 
 #### GET /users/barbers
 Get all barbers. (Requires ADMIN role)
@@ -193,15 +221,56 @@ Get all barbers. (Requires ADMIN role)
 #### PATCH /users/barbers/:id
 Update a barber. (Requires ADMIN role)
 
-**Request Body:** (all fields optional)
-```json
-{
-  "name": "string?",
-  "password": "string?" // min 6 characters
-}
+**Content-Type:** `multipart/form-data`
+
+**Request Fields:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| name | string | No | Barber's name |
+| password | string | No | New password (min 6 characters) |
+| image | File | No | New barber's photo |
+
+**Response:** Updated User object with media
+
+**Example:**
+```bash
+curl -X PATCH http://localhost:4000/users/barbers/uuid \
+  -H "Authorization: Bearer <token>" \
+  -F "name=John Updated" \
+  -F "image=@new-photo.jpg"
 ```
 
-**Response:** Updated User object
+### Media
+
+#### GET /media
+Get media by type and reference ID.
+
+**Query Parameters:**
+- `type`: string (e.g., "barber")
+- `referenceId`: string (ID of the referenced entity)
+
+**Response:** Array of Media objects
+```json
+[
+  {
+    "id": "uuid",
+    "type": "barber",
+    "referenceId": "uuid",
+    "url": "/uploads/filename.jpg",
+    "createdAt": "timestamp"
+  }
+]
+```
+
+**Example:**
+```bash
+curl "http://localhost:4000/media?type=barber&referenceId=uuid"
+```
+
+**Access Uploaded Files:**
+```
+http://localhost:3000/uploads/{filename}
+```
 
 ## Error Responses
 All endpoints may return error responses in the following format:

@@ -14,32 +14,40 @@ export class ApiError extends Error {
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // Important: allows cookies to be sent/received
-  headers: {
-    "Content-Type": "application/json",
-  },
+  withCredentials: true,
 });
 
 interface ApiFetchOptions extends AxiosRequestConfig {
   body?: any;
   cookieHeader?: string;
+  multipart?: boolean;
 }
 
 export async function apiFetch<T>(
   endpoint: string,
   options: ApiFetchOptions = {}
 ): Promise<T> {
-  const { body, cookieHeader, ...config } = options;
+  const { body, cookieHeader, multipart, ...config } = options;
+
+  // Build headers
+  const headers: Record<string, string> = {
+    ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+    ...config.headers as Record<string, string>,
+  };
+
+  // Handle multipart/form-data - let browser set Content-Type with boundary
+  if (multipart && body instanceof FormData) {
+    // Don't set Content-Type, let browser auto-set with boundary
+  } else if (!headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
 
   try {
     const response = await apiClient({
       url: endpoint,
-      ...config,
+      method: config.method || "GET",
       data: body || config.data,
-      headers: {
-        ...(cookieHeader && { Cookie: cookieHeader }),
-        ...config.headers,
-      },
+      headers,
     });
     return response.data;
   } catch (error) {
@@ -49,7 +57,6 @@ export async function apiFetch<T>(
         error.response?.data?.message || error.message || "API Error";
       const data = error.response?.data;
 
-      // Throw ApiError for consistent error handling
       throw new ApiError(message, status, data);
     }
     throw new ApiError("Network error", 0);

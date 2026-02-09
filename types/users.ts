@@ -3,5 +3,18 @@ export type Barber = {
   name: string;
   email: string;
   role: string;
+  image?: string;
+  media?: Media[];
+  createdAt: string;
+};
+
+export type Media = {
+  id: string;
+  type: "barber";
+  referenceId: string;
+  url: string;
+  filename?: string;
+  mimeType?: string;
+  size?: number;
   createdAt: string;
 };
