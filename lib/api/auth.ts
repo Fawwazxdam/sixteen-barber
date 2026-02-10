@@ -1,4 +1,4 @@
-import { apiFetch } from "./client";
+import { apiFetch, apiFetchServer } from "./client";
 
 export interface UserResponse {
   id: string;
@@ -26,7 +26,10 @@ export async function login(data: { email: string; password: string }) {
   });
 }
 
-export async function getMe() {
+export async function getMe(cookieHeader?: string) {
+  if (cookieHeader) {
+    return apiFetchServer<MeResponse>("/auth/me", cookieHeader);
+  }
   return apiFetch<MeResponse>("/auth/me");
 }
 

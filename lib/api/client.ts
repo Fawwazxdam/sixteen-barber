@@ -60,3 +60,42 @@ export async function apiFetch<T>(
     throw new ApiError("Network error", 0);
   }
 }
+
+// For server-side calls, pass cookie explicitly
+export async function apiFetchServer<T>(
+  endpoint: string,
+  cookieHeader: string,
+  options: ApiFetchOptions = {}
+): Promise<T> {
+  const { body, multipart, ...config } = options;
+
+  const headers: Record<string, string> = {
+    ...config.headers as Record<string, string>,
+    Cookie: cookieHeader,
+  };
+
+  if (multipart && body instanceof FormData) {
+  } else if (!headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  try {
+    const response = await apiClient({
+      url: endpoint,
+      method: config.method || "GET",
+      data: body || config.data,
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status ?? 0;
+      const message =
+        error.response?.data?.message || error.message || "API Error";
+      const data = error.response?.data;
+
+      throw new ApiError(message, status, data);
+    }
+    throw new ApiError("Network error", 0);
+  }
+}

@@ -10,7 +10,11 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   try {
-    const me = await getMe();
+    // Get cookies header for server-side API calls
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore.toString();
+    
+    const me = await getMe(cookieHeader);
     return (
       <div className="flex min-h-screen bg-amber-50">
         <Sidebar role={me.user.role} />
