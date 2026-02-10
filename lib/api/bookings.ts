@@ -26,7 +26,7 @@ export async function getBarberBookings(date: string, barberId: string) {
 }
 
 export async function updateBookingStatus(
-  id: string,
+  id: string, // ✅ ubah jadi string sesuai backend
   status: "pending" | "confirmed" | "completed" | "cancelled"
 ) {
   return apiFetch<Booking>(`/bookings/${id}/status`, {
