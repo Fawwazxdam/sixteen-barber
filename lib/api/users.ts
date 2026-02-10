@@ -13,14 +13,14 @@ export function createBarber(data: {
   name: string;
   email: string;
   password: string;
-  image?: File | null;
+  description?: string;
 }) {
   const formData = new FormData();
   formData.append("name", data.name);
   formData.append("email", data.email);
   formData.append("password", data.password);
-  if (data.image) {
-    formData.append("image", data.image);
+  if (data.description) {
+    formData.append("description", data.description);
   }
 
   return apiFetch<Barber>("/users/barbers", {

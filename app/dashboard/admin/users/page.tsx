@@ -51,6 +51,7 @@ export default function UsersPage() {
               <th className="px-4 py-3 w-16">Foto</th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Description</th>
               <th className="px-4 py-3">Created</th>
               <th className="px-4 py-3 text-right">Action</th>
             </tr>
@@ -58,13 +59,13 @@ export default function UsersPage() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="p-6 text-center text-gray-500">
+                <td colSpan={6} className="p-6 text-center text-gray-500">
                   Loading...
                 </td>
               </tr>
             ) : barbers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-6 text-center text-gray-500">
+                <td colSpan={6} className="p-6 text-center text-gray-500">
                   No barbers found
                 </td>
               </tr>
@@ -102,6 +103,9 @@ export default function UsersPage() {
                     </td>
                     <td className="px-4 py-3 font-medium">{b.name}</td>
                     <td className="px-4 py-3 text-gray-500">{b.email}</td>
+                    <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
+                      {b.description || "-"}
+                    </td>
                     <td className="px-4 py-3 text-sm text-gray-500">
                       {new Date(b.createdAt).toLocaleDateString()}
                     </td>

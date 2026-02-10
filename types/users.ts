@@ -2,7 +2,7 @@ export type Barber = {
   id: string;
   name: string;
   email: string;
-  role: string;
+  description?: string;
   image?: string;
   media?: Media[];
   createdAt: string;

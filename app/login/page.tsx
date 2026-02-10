@@ -64,6 +64,12 @@ export default function LoginPage() {
             {loading ? "Masuk..." : "Login"}
           </button>
         </div>
+        <p className="text-sm text-amber-700 mt-6">
+          Kembali ke halaman utama{" "}
+          <a href="/" className="text-amber-900 font-semibold">
+            Klik disini
+          </a>
+        </p>
       </form>
     </div>
   );
