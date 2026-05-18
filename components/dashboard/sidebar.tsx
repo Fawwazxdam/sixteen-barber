@@ -45,6 +45,12 @@ export default function Sidebar({ role }: { role: string }) {
             <Scissors size={18} /> Booking Saya
           </Link>
         )}
+          <Link
+            href="/dashboard/admin/store-settings"
+            className="flex items-center gap-2 px-3 py-2 rounded hover:bg-amber-800"
+          >
+            <Scissors size={18} /> Pengaturan Toko
+          </Link>
       </nav>
     </aside>
   );

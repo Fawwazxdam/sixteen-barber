@@ -75,7 +75,7 @@ export default function UsersPage() {
                 return (
                   <tr key={b.id} className="border-t">
                     <td className="px-4 py-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-100">
                         {imageUrl ? (
                           <img
                             src={imageUrl}

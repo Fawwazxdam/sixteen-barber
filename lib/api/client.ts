@@ -21,10 +21,16 @@ interface ApiFetchOptions extends AxiosRequestConfig {
   multipart?: boolean;
 }
 
+export type ApiResponse<T> = {
+  status: number;
+  message: string;
+  data: T;
+};
+
 export async function apiFetch<T>(
   endpoint: string,
   options: ApiFetchOptions = {}
-): Promise<T> {
+): Promise<ApiResponse<T>> {
   const { body, multipart, ...config } = options;
 
   // Build headers
@@ -47,7 +53,7 @@ export async function apiFetch<T>(
       headers,
       withCredentials: true,
     });
-    return response.data;
+    return response.data as ApiResponse<T>;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status ?? 0;

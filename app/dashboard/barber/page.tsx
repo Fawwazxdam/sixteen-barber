@@ -111,7 +111,7 @@ export default function BarberDashboard() {
             {stats.pendingConfirmations.map((booking) => (
               <div
                 key={booking.id}
-                className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 rounded-lg gap-4"
+                className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-neutral-50 rounded-lg gap-4"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">

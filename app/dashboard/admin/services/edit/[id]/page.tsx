@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/api/client";
-import { Service } from "@/types/services";
+import { getServices, updateService } from "@/lib/api/services";
 
 export default function EditServicePage() {
   const { id } = useParams<{ id: string }>();
@@ -16,24 +15,32 @@ export default function EditServicePage() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     async function fetchService() {
-      const data = await apiFetch(`/services`) as Service[];
-      const service = data.find((s: Service) => s.id === id);
+      try {
+        // Karena API getServiceById belum diexpose secara spesifik, 
+        // kita tetap memfilter dari getServices() seperti kodemu sebelumnya
+        const data = await getServices();
+        const service = data.find((s) => s.id === id);
 
-      if (!service) {
+        if (!service) {
+          router.push("/dashboard/admin/services");
+          return;
+        }
+
+        setForm({
+          name: service.name,
+          price: String(service.price),
+          duration: String(service.duration),
+        });
+      } catch (error) {
+        console.error("Failed to load service:", error);
         router.push("/dashboard/admin/services");
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setForm({
-        name: service.name,
-        price: String(service.price),
-        duration: String(service.duration),
-      });
-
-      setLoading(false);
     }
 
     fetchService();
@@ -41,21 +48,24 @@ export default function EditServicePage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    setSaving(true);
 
-    await apiFetch(`/services/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify({
+    try {
+      await updateService(id, {
         name: form.name,
         price: Number(form.price),
         duration: Number(form.duration),
-      }),
-    });
-
-    router.push("/dashboard/admin/services");
+      });
+      router.push("/dashboard/admin/services");
+    } catch (error) {
+      console.error("Failed to update service:", error);
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (loading) {
-    return <div className="text-gray-500">Loading service data...</div>;
+    return <div className="p-8 text-gray-500">Loading service data...</div>;
   }
 
   return (
@@ -71,7 +81,6 @@ export default function EditServicePage() {
         </div>
 
         <form onSubmit={submit} className="space-y-5">
-          {/* Service Name */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">
               Service Name
@@ -84,7 +93,6 @@ export default function EditServicePage() {
             />
           </div>
 
-          {/* Price */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">
               Price (IDR)
@@ -95,10 +103,10 @@ export default function EditServicePage() {
               value={form.price}
               onChange={(e) => setForm({ ...form, price: e.target.value })}
               required
+              min="0"
             />
           </div>
 
-          {/* Duration */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">
               Duration (minutes)
@@ -109,24 +117,26 @@ export default function EditServicePage() {
               value={form.duration}
               onChange={(e) => setForm({ ...form, duration: e.target.value })}
               required
+              min="1"
             />
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-50"
+              disabled={saving}
+              className="px-4 py-2 rounded-lg border text-gray-600 hover:bg-neutral-50 disabled:opacity-50"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-amber-700 text-white font-medium hover:bg-amber-800"
+              disabled={saving}
+              className="px-5 py-2 rounded-lg bg-amber-700 text-white font-medium hover:bg-amber-800 disabled:opacity-50"
             >
-              Update Service
+              {saving ? "Updating..." : "Update Service"}
             </button>
           </div>
         </form>

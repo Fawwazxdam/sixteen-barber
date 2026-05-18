@@ -1,32 +1,45 @@
+// lib/api/services.ts
 import { apiFetch } from "./client";
+import type { Service } from "@/types/services"; // Pastikan tipe Service sudah ada
 
-export function getServices() {
-  return apiFetch("/services");
+export async function getServices() {
+  const res = await apiFetch<Service[]>("/services");
+  return res.data; // Buka bungkus envelope
 }
 
-export function createService(data: {
+export async function createService(data: {
   name: string;
   price: number;
   duration: number;
 }) {
-  return apiFetch("/services", {
+  const res = await apiFetch<Service>("/services", {
     method: "POST",
     body: JSON.stringify(data),
   });
+  return res.data;
 }
 
-export function updateService(
+export async function updateService(
   id: string,
-  data: any
+  data: Partial<{ name: string; price: number; duration: number }>
 ) {
-  return apiFetch(`/services/${id}`, {
-    method: "PUT",
+  const res = await apiFetch<Service>(`/services/${id}`, {
+    method: "PATCH", // Di controller backend kamu menggunakan PATCH, bukan PUT
     body: JSON.stringify(data),
   });
+  return res.data;
 }
 
-export function deleteService(id: string) {
-  return apiFetch(`/services/${id}`, {
+export async function toggleServiceActive(id: string) {
+  const res = await apiFetch<Service>(`/services/${id}/toggle-active`, {
+    method: "PATCH",
+  });
+  return res.data;
+}
+
+export async function deleteService(id: string) {
+  const res = await apiFetch(`/services/${id}`, {
     method: "DELETE",
   });
+  return res.data;
 }

@@ -93,7 +93,7 @@ export default function EditBarberPage() {
               Foto Barber
             </label>
             <div className="flex items-center gap-4">
-              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-amber-200">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-neutral-100 border-2 border-amber-200">
                 {preview ? (
                   <img
                     src={preview}
@@ -128,7 +128,7 @@ export default function EditBarberPage() {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
+                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-neutral-50 cursor-pointer"
                 >
                   {preview && preview !== currentImage ? "Ganti Foto" : "Upload Foto"}
                 </label>

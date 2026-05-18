@@ -5,6 +5,7 @@ export interface UserResponse {
   email: string;
   name: string;
   role: "ADMIN" | "BARBER";
+  tenantId?: string;
 }
 
 export interface LoginResponse {
@@ -13,7 +14,14 @@ export interface LoginResponse {
 }
 
 export interface MeResponse {
-  user: UserResponse;
+  user: UserResponse & {
+    tenantId?: string;
+    tenant?: {
+      id: string;
+      name: string;
+      slug: string;
+    };
+  };
 }
 
 export interface LogoutResponse {
@@ -29,7 +37,9 @@ export async function login(data: { email: string; password: string }) {
 
 export async function getMe(cookieHeader?: string) {
   if (cookieHeader) {
-    return apiFetchServer<MeResponse>("/auth/me", cookieHeader);
+    const result = await apiFetchServer<MeResponse>("/auth/me", cookieHeader);
+    console.log("getMe result:", result);
+    return result;
   }
   return apiFetch<MeResponse>("/auth/me");
 }

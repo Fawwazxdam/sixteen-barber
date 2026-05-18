@@ -51,7 +51,7 @@ export default function Topbar({ user }: { user: User }) {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-3 hover:bg-gray-100 transition-colors px-2 py-1.5 rounded-lg"
+          className="flex items-center gap-3 hover:bg-neutral-100 transition-colors px-2 py-1.5 rounded-lg"
         >
           <div className="text-sm text-right hidden sm:block">
             <p className="font-medium text-gray-900">{user.name || "User"}</p>

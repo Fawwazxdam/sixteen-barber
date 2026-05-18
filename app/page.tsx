@@ -1,30 +1,24 @@
-import HeroSection from "./components/HeroSection";
-import ServicesSection from "./components/ServicesSection";
-import CrewSection from "./components/CrewSection";
-import GallerySection from "./components/GallerySection";
-import CTASection from "./components/CTASection";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import BarberPoleAccent from "./components/BarberPoleAccent";
+// src/app/page.tsx
+import { Navbar } from "@/components/layout/Navbar";
+// Anggap komponen section lain sudah kamu buat memisahkan dari HTML
+import { HeroSection } from "@/components/sections/HeroSection"; 
+import { FeaturesSection } from "@/components/sections/FeaturesSection";
+import { PricingSection } from "@/components/sections/PricingSection";
+// import { CtaSection } from "@/components/sections/CtaSection";
+import { Footer } from "@/components/layout/Footer";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 via-yellow-50 to-orange-100 relative">
-      {/* Vintage texture overlay */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-        }}
-      />
-      <Header />
-      <BarberPoleAccent />
-      <HeroSection id="home" />
-      <ServicesSection id="services" />
-      <CrewSection id="crew" />
-      <GallerySection id="gallery" />
-      <CTASection id="contact" />
+    <div className="min-h-screen bg-neutral-50 text-gray-900 font-sans selection:bg-amber-200">
+      <Navbar />
+      
+      <main className="pt-20">
+        <HeroSection />
+        <FeaturesSection /> {/* Copas bagian <section> fitur dari HTML kesini */}
+        <PricingSection />  {/* Copas bagian <section> harga dari HTML kesini */}
+        {/* <CtaSection />      Copas bagian <section> CTA hitam dari HTML kesini */}
+      </main>
+
       <Footer />
     </div>
   );

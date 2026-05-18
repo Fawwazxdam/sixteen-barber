@@ -104,10 +104,10 @@ export default function AdminDashboard() {
             {stats.topHaircuts.map((service, index) => (
               <div
                 key={service.serviceId}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-neutral-50 rounded-lg"
               >
                 <div className="flex items-center gap-3">
-                  <span className="flex items-center justify-center w-6 h-6 bg-gray-200 text-gray-700 text-sm font-medium rounded-full">
+                  <span className="flex items-center justify-center w-6 h-6 bg-neutral-200 text-gray-700 text-sm font-medium rounded-full">
                     {index + 1}
                   </span>
                   <span className="font-medium text-gray-900">

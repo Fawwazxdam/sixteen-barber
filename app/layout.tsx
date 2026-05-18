@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${inter.variable} antialiased font-inter`}
+        className={`${playfair.variable} ${inter.variable} antialiased font-inter bg-neutral-50 text-gray-900`}
       >
         <Toaster position="top-right" />
         {children}

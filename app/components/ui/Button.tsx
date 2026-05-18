@@ -10,9 +10,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = 'px-6 py-3 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variantClasses = {
-      primary: 'bg-amber-700 hover:bg-amber-800 text-white focus:ring-amber-500',
-      secondary: 'bg-amber-100 hover:bg-amber-200 text-amber-900 focus:ring-amber-500',
-      outline: 'border border-amber-700 text-amber-700 hover:bg-amber-50 focus:ring-amber-500'
+      primary: 'bg-amber-500 hover:bg-amber-600 text-white focus:ring-amber-500 dark:bg-amber-400 dark:text-gray-900 dark:hover:bg-amber-300 dark:focus:ring-amber-400',
+      secondary: 'bg-amber-100 hover:bg-amber-200 text-amber-900 focus:ring-amber-500 dark:bg-neutral-700 dark:text-amber-300 dark:hover:bg-neutral-600',
+      outline: 'border border-amber-700 text-amber-700 hover:bg-amber-50 focus:ring-amber-500 dark:border-amber-400 dark:text-amber-400 dark:hover:bg-neutral-800'
     };
 
     return (
