@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "@/components/barber/layout/Header";
+import Footer from "@/components/barber/layout/Footer";
 import { Button } from "../../components/ui/button";
-import Input from "../components/ui/Input";
-import Select from "../components/ui/Select";
-import Textarea from "../components/ui/Textarea";
+import Input from "@/components/barber/ui/Input";
+import Select from "@/components/barber/ui/Select";
+import Textarea from "@/components/barber/ui/Textarea";
 import { idrFormat } from "../../lib/utils";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";

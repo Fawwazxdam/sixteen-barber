@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getBarbers } from "@/lib/api/users";
 import { Barber } from "@/types/users";
+import { Plus, Pencil, Loader2, Users, UserCircle } from "lucide-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -23,106 +24,133 @@ export default function UsersPage() {
       return url.startsWith("http") ? url : API_BASE_URL + url;
     }
     if (barber.image) {
-      return barber.image.startsWith("http") ? barber.image : API_BASE_URL + barber.image;
+      return barber.image.startsWith("http")
+        ? barber.image
+        : API_BASE_URL + barber.image;
     }
     return null;
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-amber-900">Barbers</h1>
-          <p className="text-sm text-gray-500">Kelola akun barber</p>
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+            Akun Barber
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Kelola tim kapster, profil, dan akses mereka.
+          </p>
         </div>
 
         <Link
           href="/dashboard/admin/users/create"
-          className="px-4 py-2 rounded-lg bg-amber-700 text-white hover:bg-amber-800"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95"
         >
-          + Add Barber
+          <Plus className="w-5 h-5" />
+          <span>Tambah Barber</span>
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-amber-50 text-left text-sm text-gray-600">
-            <tr>
-              <th className="px-4 py-3 w-16">Foto</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Description</th>
-              <th className="px-4 py-3">Created</th>
-              <th className="px-4 py-3 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
+      {/* Table Card */}
+      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs uppercase bg-neutral-50 dark:bg-neutral-800/50 text-gray-500 dark:text-gray-400 font-bold border-b border-gray-200 dark:border-gray-800 tracking-wider">
               <tr>
-                <td colSpan={6} className="p-6 text-center text-gray-500">
-                  Loading...
-                </td>
+                <th className="px-6 py-4 w-20 text-center">Foto</th>
+                <th className="px-6 py-4">Nama</th>
+                <th className="px-6 py-4">Email</th>
+                <th className="px-6 py-4">Deskripsi</th>
+                <th className="px-6 py-4">Bergabung</th>
+                <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
-            ) : barbers.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="p-6 text-center text-gray-500">
-                  No barbers found
-                </td>
-              </tr>
-            ) : (
-              barbers.map((b) => {
-                const imageUrl = getBarberImage(b);
-                return (
-                  <tr key={b.id} className="border-t">
-                    <td className="px-4 py-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-100">
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt={b.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400">
-                            <svg
-                              className="w-5 h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                              />
-                            </svg>
-                          </div>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+                      <Loader2 className="w-8 h-8 animate-spin text-amber-500 mb-3" />
+                      <p className="font-medium animate-pulse">
+                        Memuat data barber...
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : barbers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+                      <Users className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" />
+                      <p className="font-medium text-lg">
+                        Belum ada data barber
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                barbers.map((b) => {
+                  const imageUrl = getBarberImage(b);
+                  return (
+                    <tr
+                      key={b.id}
+                      className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors group"
+                    >
+                      <td className="px-6 py-4 flex justify-center">
+                        <div className="w-12 h-12 rounded-full overflow-hidden bg-amber-50 dark:bg-amber-500/10 border-2 border-transparent group-hover:border-amber-200 dark:group-hover:border-amber-500/30 transition-colors flex-shrink-0">
+                          {imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt={b.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-amber-600/50 dark:text-amber-500/50">
+                              <UserCircle className="w-8 h-8" />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="font-bold text-gray-900 dark:text-white text-base">
+                          {b.name}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600 dark:text-gray-400 font-medium">
+                        {b.email}
+                      </td>
+                      <td className="px-6 py-4 text-gray-500 dark:text-gray-500 max-w-[200px] truncate">
+                        {b.description || (
+                          <span className="italic text-gray-400">
+                            Tidak ada deskripsi
+                          </span>
                         )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 font-medium">{b.name}</td>
-                    <td className="px-4 py-3 text-gray-500">{b.email}</td>
-                    <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
-                      {b.description || "-"}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
-                      {new Date(b.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <Link
-                        href={`/dashboard/admin/users/edit/${b.id}`}
-                        className="text-amber-700 hover:underline"
-                      >
-                        Edit
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400 font-medium">
+                        {new Date(b.createdAt).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Link
+                          href={`/dashboard/admin/users/edit/${b.id}`}
+                          title="Edit Barber"
+                          className="inline-flex p-2.5 text-blue-600 bg-blue-50 border border-blue-100 hover:bg-blue-100 rounded-lg transition-colors dark:text-blue-400 dark:bg-blue-500/10 dark:border-blue-500/20 dark:hover:bg-blue-500/20"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

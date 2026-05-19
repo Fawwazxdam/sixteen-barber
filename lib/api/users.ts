@@ -14,6 +14,7 @@ export function createBarber(data: {
   email: string;
   password: string;
   description?: string;
+  image?: File;
 }) {
   const formData = new FormData();
   formData.append("name", data.name);
@@ -21,6 +22,9 @@ export function createBarber(data: {
   formData.append("password", data.password);
   if (data.description) {
     formData.append("description", data.description);
+  }
+  if (data.image) {
+    formData.append("image", data.image);
   }
 
   return apiFetch<Barber>("/users/barbers", {

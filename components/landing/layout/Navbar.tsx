@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 // import { Button } from "@/components/ui/Button";
-import { Button } from "@/components/frontpage/Button";
+import { Button } from "@/components/landing/ui/Button";
 
 export function Navbar() {
   useEffect(() => {
@@ -47,7 +47,7 @@ export function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
-          <Button variant="ghost">Login</Button>
+          <Button variant="ghost"> <a href="/login">Login</a></Button>
           <Button>Get Started</Button>
         </div>
       </div>

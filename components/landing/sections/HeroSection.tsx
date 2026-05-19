@@ -2,7 +2,7 @@
 "use client"; // Wajib untuk framer-motion di Next.js App Router
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Button } from "@/components/frontpage/Button";
+import { Button } from "@/components/landing/ui/Button";
 
 export function HeroSection() {
   return (

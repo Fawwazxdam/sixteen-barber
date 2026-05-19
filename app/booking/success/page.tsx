@@ -2,8 +2,8 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "@/components/barber/layout/Header";
+import Footer from "@/components/barber/layout/Footer";
 import { Button } from "../../../components/ui/button";
 import { getBooking } from "../../../lib/api/bookings";
 import { idrFormat } from "../../../lib/utils";

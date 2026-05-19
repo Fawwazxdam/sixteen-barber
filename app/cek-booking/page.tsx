@@ -2,10 +2,10 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "@/components/barber/layout/Header";
+import Footer from "@/components/barber/layout/Footer";
 import { Button } from "../../components/ui/button";
-import Input from "../components/ui/Input";
+import Input from "@/components/barber/ui/Input";
 import { getBooking } from "../../lib/api/bookings";
 import { idrFormat } from "../../lib/utils";
 import { CheckCircle, Calendar, Clock, User, Phone, Scissors, Search } from "lucide-react";

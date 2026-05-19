@@ -1,11 +1,9 @@
+// src/components/dashboard/Topbar.tsx
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/api/auth";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { LogOut, User, ChevronDown } from "lucide-react";
+import { Bell, ChevronDown, LogOut } from "lucide-react";
 
 interface User {
   id: string;
@@ -19,17 +17,15 @@ export default function Topbar({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        !dropdownRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -44,46 +40,96 @@ export default function Topbar({ user }: { user: User }) {
     }
   };
 
-  return (
-    <header className="h-16 bg-white border-b flex items-center justify-between px-6 sticky top-0 z-50">
-      <div className="font-semibold text-amber-900">Dashboard</div>
+  const initials = (user.name || "U").charAt(0).toUpperCase();
+  const roleLabel = user.role === "ADMIN" ? "Admin" : "Barber";
 
-      <div className="relative" ref={dropdownRef}>
+  return (
+    <header className="h-14 bg-white border-b border-amber-100 flex items-center justify-between px-5 sticky top-0 z-50 flex-shrink-0">
+      {/* Page title */}
+      <p className="font-black text-[#1c1008] text-sm tracking-tight font-syne">
+        Dashboard
+      </p>
+
+      <div className="flex items-center gap-2">
+        {/* Notification bell */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-3 hover:bg-neutral-100 transition-colors px-2 py-1.5 rounded-lg"
+          className="relative w-[34px] h-[34px] rounded-lg flex items-center justify-center
+          text-amber-800 border border-transparent
+          hover:bg-amber-50 hover:border-amber-100
+          transition-all duration-200"
         >
-          <div className="text-sm text-right hidden sm:block">
-            <p className="font-medium text-gray-900">{user.name || "User"}</p>
-            <p className="text-xs text-gray-500">{user.role}</p>
-          </div>
-          <div className="h-9 w-9 rounded-full bg-amber-800 text-white flex items-center justify-center font-medium">
-            {(user.name || "U").charAt(0).toUpperCase()}
-          </div>
-          <ChevronDown
-            className={`h-4 w-4 text-gray-500 transition-transform ${
-              isOpen ? "rotate-180" : ""
-            }`}
-          />
+          <Bell className="w-4 h-4" strokeWidth={1.75} />
+          {/* Dot */}
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-amber-500 rounded-full border border-white" />
         </button>
 
-        {isOpen && (
-          <Card className="absolute right-0 mt-2 w-48 py-2 shadow-lg animate-in fade-in zoom-in-95 duration-100">
-            <div className="px-3 py-2 border-b">
-              <p className="font-medium text-sm">{user.name || "User"}</p>
-              <p className="text-xs text-muted-foreground">{user.email || "No email"}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="justify-start mx-3 -mt-4 text-red-600 hover:text-red-700 hover:bg-red-50"
+        {/* Divider */}
+        <div className="w-px h-7 bg-amber-100 mx-1" />
+
+        {/* User dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-transparent
+              hover:bg-amber-50 hover:border-amber-100
+              transition-all duration-200"
+          >
+            {/* Avatar */}
+            <div
+              className="w-[30px] h-[30px] rounded-lg bg-amber-600 text-white
+              flex items-center justify-center font-black text-xs font-syne flex-shrink-0"
             >
-              <LogOut className="h-4 w-4" />
-              Log Out
-            </Button>
-          </Card>
-        )}
+              {initials}
+            </div>
+            {/* Info */}
+            <div className="hidden sm:flex flex-col text-left leading-tight">
+              <span className="text-[13px] font-semibold text-[#1c1008]">
+                {user.name || "User"}
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600">
+                {roleLabel}
+              </span>
+            </div>
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-amber-800 transition-transform duration-200 ${
+                isOpen ? "rotate-180" : ""
+              }`}
+              strokeWidth={2}
+            />
+          </button>
+
+          {/* Dropdown */}
+          {isOpen && (
+            <div
+              className="absolute right-0 mt-2 w-52 bg-white border border-amber-100
+              rounded-xl shadow-lg shadow-amber-900/5 py-1
+              animate-in fade-in zoom-in-95 duration-100 origin-top-right"
+            >
+              {/* User info header */}
+              <div className="px-4 py-3 border-b border-amber-50">
+                <p className="text-sm font-semibold text-[#1c1008]">
+                  {user.name || "User"}
+                </p>
+                <p className="text-xs text-amber-700/60 mt-0.5">
+                  {user.email || "Tidak ada email"}
+                </p>
+              </div>
+
+              {/* Logout */}
+              <div className="p-1">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium
+                    text-red-500 hover:bg-red-50 hover:text-red-600
+                    transition-all duration-200"
+                >
+                  <LogOut className="w-4 h-4" strokeWidth={1.75} />
+                  Keluar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

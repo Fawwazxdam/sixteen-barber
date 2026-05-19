@@ -4,7 +4,7 @@ import { getMe } from "@/lib/api/auth";
 import Sidebar from "@/components/dashboard/sidebar";
 import Topbar from "@/components/dashboard/topbar";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
   children,
@@ -15,14 +15,18 @@ export default async function DashboardLayout({
     // Get cookies header for server-side API calls
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
-    
+
     const me = await getMe(cookieHeader);
+
     return (
-      <div className="flex min-h-screen bg-amber-50">
+      <div className="flex h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300 overflow-hidden">
         <Sidebar role={me.user.role} />
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 overflow-hidden">
           <Topbar user={me.user} />
-          <main className="p-6">{children}</main>
+          {/* Tambahan overflow-y-auto agar sidebar tetap diam saat konten di-scroll */}
+          <main className="flex-1 overflow-y-auto p-6 md:p-8 w-full max-w-7xl mx-auto">
+            {children}
+          </main>
         </div>
       </div>
     );
