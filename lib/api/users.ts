@@ -15,6 +15,7 @@ export function createBarber(data: {
   password: string;
   description?: string;
   image?: File;
+  schedules?: BarberScheduleItem[];
 }) {
   const formData = new FormData();
   formData.append("name", data.name);
@@ -25,6 +26,9 @@ export function createBarber(data: {
   }
   if (data.image) {
     formData.append("image", data.image);
+  }
+  if (data.schedules) {
+    formData.append("schedules", JSON.stringify(data.schedules));
   }
 
   return apiFetch<Barber>("/users/barbers", {
@@ -68,4 +72,25 @@ export function deleteBarber(id: string) {
 
 export function getBarberMedia(barberId: string) {
   return apiFetch<{ url: string }[]>(`/media?type=barber&referenceId=${barberId}`);
+}
+
+export interface BarberScheduleItem {
+  id?: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  isActive: boolean;
+}
+
+export async function getBarberSchedule(barberId: string) {
+  const res = await apiFetch<BarberScheduleItem[]>(`/barbers/${barberId}/schedule`);
+  return res.data;
+}
+
+export async function updateBarberSchedule(barberId: string, schedules: BarberScheduleItem[]) {
+  const res = await apiFetch<BarberScheduleItem[]>(`/barbers/${barberId}/schedule`, {
+    method: "PUT",
+    body: JSON.stringify({ schedules }),
+  });
+  return res.data;
 }

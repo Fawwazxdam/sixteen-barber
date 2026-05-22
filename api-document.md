@@ -1288,6 +1288,88 @@ Default operating hours: `09:00` - `21:00` (9 AM to 9 PM)
 
 Bookings outside these hours will be rejected.
 
+## 📅 Barber Schedules (Jam Operasional Barber)
+
+Jadwal kerja operasional per barber menggantikan jam operasional global. Setiap barber memiliki 7 baris konfigurasi jadwal (hari 0 = Minggu sampai 6 = Sabtu).
+
+### GET `/barbers/:barberId/schedule`
+Mengambil data jadwal 7 hari milik barber tertentu.
+
+**Success Response (200):**
+```json
+{
+  "status": 200,
+  "data": [
+    {
+      "id": "uuid",
+      "barberId": "uuid-barber",
+      "dayOfWeek": 0,
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "isActive": true,
+      "createdAt": "2026-05-22T00:00:00.000Z"
+    },
+    ...
+  ]
+}
+```
+
+---
+
+### PUT `/barbers/:barberId/schedule`
+Memperbarui konfigurasi jadwal kerja barber (Memerlukan autentikasi ADMIN atau BARBER yang bersangkutan).
+
+**Headers:**
+```
+Content-Type: application/json
+Cookie: access_token=<token>
+```
+
+**Request Body:**
+```json
+{
+  "schedules": [
+    {
+      "dayOfWeek": 0,
+      "startTime": "09:00",
+      "endTime": "17:00",
+      "isActive": true
+    },
+    {
+      "dayOfWeek": 1,
+      "startTime": "09:00",
+      "endTime": "17:00",
+      "isActive": false
+    },
+    ...
+  ]
+}
+```
+
+**Success Response (200):**
+```json
+{
+  "status": 200,
+  "message": "Barber schedule updated successfully",
+  "data": [
+    {
+      "id": "uuid",
+      "barberId": "uuid-barber",
+      "dayOfWeek": 0,
+      "startTime": "09:00",
+      "endTime": "17:00",
+      "isActive": true
+    },
+    ...
+  ]
+}
+```
+
+**Error Responses:**
+- `400` — Schedules must be an array / Invalid time format (must be HH:MM)
+- `401` — Unauthenticated
+- `403` — Forbidden (hanya admin atau barber terkait)
+
 ---
 
 ## 💾 Database Schema Reference

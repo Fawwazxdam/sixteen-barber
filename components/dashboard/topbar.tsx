@@ -1,4 +1,3 @@
-// src/components/dashboard/Topbar.tsx
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -44,12 +43,7 @@ export default function Topbar({ user }: { user: User }) {
   const roleLabel = user.role === "ADMIN" ? "Admin" : "Barber";
 
   return (
-    <header className="h-14 bg-white border-b border-amber-100 flex items-center justify-between px-5 sticky top-0 z-50 flex-shrink-0">
-      {/* Page title */}
-      <p className="font-black text-[#1c1008] text-sm tracking-tight font-syne">
-        Dashboard
-      </p>
-
+    <header className="h-14 bg-white border-b border-amber-100 flex items-center justify-end px-5 sticky top-0 z-50 flex-shrink-0">
       <div className="flex items-center gap-2">
         {/* Notification bell */}
         <button

@@ -36,8 +36,16 @@ const navSystem = [
 export default function Sidebar({ role }: { role: string }) {
   const pathname = usePathname();
 
-  const isActive = (href: string) =>
-    href === "/dashboard" ? pathname === href : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === "/dashboard") {
+      return (
+        pathname === "/dashboard" ||
+        pathname === "/dashboard/admin" ||
+        pathname === "/dashboard/barber"
+      );
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <aside className="w-56 bg-yellow-950 flex flex-col border-r border-amber-900/20 hidden md:flex">
@@ -98,18 +106,22 @@ export default function Sidebar({ role }: { role: string }) {
           ))}
 
         {/* Sistem */}
-        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 px-2 pb-1.5 pt-4">
-          Sistem
-        </p>
-        {navSystem.map(({ href, label, icon: Icon }) => (
-          <NavLink
-            key={href}
-            href={href}
-            label={label}
-            icon={Icon}
-            active={isActive(href)}
-          />
-        ))}
+        {role === "ADMIN" && (
+          <>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 px-2 pb-1.5 pt-4">
+              Sistem
+            </p>
+            {navSystem.map(({ href, label, icon: Icon }) => (
+              <NavLink
+                key={href}
+                href={href}
+                label={label}
+                icon={Icon}
+                active={isActive(href)}
+              />
+            ))}
+          </>
+        )}
       </nav>
 
       {/* Logout */}
@@ -144,19 +156,17 @@ function NavLink({
       href={href}
       className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium
         border transition-all duration-200
-        ${
-          active
-            ? "text-white bg-white/[0.14] border-amber-600/35"
-            : "text-amber-100/50 border-transparent hover:text-amber-100 hover:bg-white/[0.08] hover:border-amber-900/30"
+        ${active
+          ? "text-white bg-white/[0.14] border-amber-600/35"
+          : "text-amber-100/50 border-transparent hover:text-amber-100 hover:bg-white/[0.08] hover:border-amber-900/30"
         }`}
     >
       {active && (
         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-amber-500 rounded-r-full" />
       )}
       <Icon
-        className={`w-4 h-4 flex-shrink-0 transition-colors duration-200 ${
-          active ? "text-amber-500" : "opacity-70"
-        }`}
+        className={`w-4 h-4 flex-shrink-0 transition-colors duration-200 ${active ? "text-amber-500" : "opacity-70"
+          }`}
         strokeWidth={1.75}
       />
       {label}

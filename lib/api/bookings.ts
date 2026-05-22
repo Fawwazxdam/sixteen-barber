@@ -71,3 +71,14 @@ export async function getBarberDashboardStats(barberId: string) {
     `/bookings/barber/dashboard/stats?barberId=${barberId}`
   );
 }
+
+export async function getBarberBookingsByRange(
+  barberId: string,
+  startDate?: string,
+  endDate?: string
+) {
+  let url = `/bookings/barber/range?barberId=${barberId}`;
+  if (startDate) url += `&startDate=${startDate}`;
+  if (endDate) url += `&endDate=${endDate}`;
+  return apiFetch<{ status: number; data: Booking[] }>(url);
+}

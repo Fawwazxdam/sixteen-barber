@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Navbar } from "@/components/landing/layout/Navbar";
-import { Footer } from "@/components/landing/layout/Footer";
+import { Suspense, useState, useEffect } from "react";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
+import { TenantNavbar } from "@/components/landing/layout/TenantNavbar";
+import { TenantFooter } from "@/components/landing/layout/TenantFooter";
 import { Button } from "@/components/landing/ui/Button";
 import { getBooking } from "@/lib/api/bookings";
-import { CheckCircle, Calendar, Clock, User, Phone, Scissors, Search } from "lucide-react";
+import { getTenantBySlug } from "@/lib/api/tenants";
+import { CheckCircle, Calendar, Clock, User, Phone, Scissors, Search, MapPin } from "lucide-react";
 
 interface BookingDetails {
   id: string;
@@ -17,25 +18,69 @@ interface BookingDetails {
   customerPhone: string;
   customerNote: string | null;
   bookingDate: string;
-  status: "pending" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
   duration: number;
   createdAt: string;
   updatedAt: string;
 }
 
+interface Tenant {
+  id: string;
+  name: string;
+  slug: string;
+  address?: string;
+}
+
 function CekBookingContent() {
   const router = useRouter();
+  const params = useParams();
   const searchParams = useSearchParams();
+  
+  const slug = params?.slug as string;
   const initialId = searchParams.get("id") || "";
 
   const [bookingId, setBookingId] = useState(initialId);
   const [booking, setBooking] = useState<BookingDetails | null>(null);
+  const [tenant, setTenant] = useState<Tenant | null>(null);
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!bookingId.trim()) {
+  // Load tenant information on mount
+  useEffect(() => {
+    if (!slug) return;
+    
+    const fetchTenant = async () => {
+      try {
+        const tenantData = await getTenantBySlug(slug);
+        if (tenantData) {
+          setTenant(tenantData);
+        } else {
+          setError("Store tidak ditemukan");
+        }
+      } catch (err) {
+        console.error("Error fetching tenant info:", err);
+        setError("Gagal memuat informasi store");
+      } finally {
+        setPageLoading(false);
+      }
+    };
+
+    fetchTenant();
+  }, [slug]);
+
+  // Optionally auto-search if id is in query params
+  useEffect(() => {
+    if (initialId && tenant) {
+      handleSearch(null, initialId);
+    }
+  }, [initialId, tenant]);
+
+  const handleSearch = async (e: React.FormEvent | null, searchId?: string) => {
+    if (e) e.preventDefault();
+    const idToSearch = searchId || bookingId;
+
+    if (!idToSearch.trim()) {
       setError("Masukkan ID Booking terlebih dahulu");
       return;
     }
@@ -45,8 +90,9 @@ function CekBookingContent() {
     setBooking(null);
 
     try {
-      const data = await getBooking(bookingId);
+      const data = await getBooking(idToSearch);
       const bookingData = (data as any)?.data || data;
+      
       if (bookingData && bookingData.id) {
         setBooking(bookingData as BookingDetails);
       } else {
@@ -104,9 +150,39 @@ function CekBookingContent() {
     });
   };
 
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-medium tracking-wide uppercase text-sm">Memuat halaman...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!tenant) {
+    return (
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-10 text-center border border-gray-200 dark:border-gray-700">
+          <div className="w-20 h-20 bg-red-50 dark:bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-4xl">❌</span>
+          </div>
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-3 uppercase tracking-tight">
+            Store Tidak Ditemukan
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">Informasi store tidak dapat dimuat atau slug tidak valid.</p>
+          <Button onClick={() => router.push("/")} className="w-full text-lg py-6">
+            Kembali ke Beranda
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-neutral-50 text-gray-900 dark:bg-neutral-900 dark:text-white font-sans selection:bg-amber-200">
-      <Navbar />
+      <TenantNavbar tenantName={tenant.name} tenantSlug={tenant.slug} />
 
       <main className="pt-32 pb-20 px-6 min-h-[calc(100vh-20rem)]">
         <div className="max-w-xl mx-auto">
@@ -114,22 +190,22 @@ function CekBookingContent() {
           <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-200 dark:border-gray-700">
             <div className="text-center mb-8">
               <span className="inline-block text-amber-600 font-bold text-xs uppercase tracking-widest mb-3 dark:text-amber-400">
-                Pencarian
+                Reservasi {tenant.name}
               </span>
               <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
                 Cek Status Booking
               </h1>
               <p className="text-gray-500 dark:text-gray-400 mt-2">
-                Masukkan ID Booking untuk melihat detail pesanan kamu
+                Masukkan ID Booking Anda untuk memeriksa status jadwal cukur
               </p>
             </div>
 
-            <form onSubmit={handleSearch} className="flex flex-col gap-4">
+            <form onSubmit={(e) => handleSearch(e)} className="flex flex-col gap-4">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Masukkan ID Booking (contoh: 3f8a1b2c)"
+                  placeholder="ID Booking (contoh: 3f8a1b2c)"
                   value={bookingId}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBookingId(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none text-center font-mono font-bold tracking-widest uppercase text-lg"
@@ -217,13 +293,15 @@ function CekBookingContent() {
                     className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                       booking.status === "pending"
                         ? "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-400"
-                        : booking.status === "completed"
+                        : booking.status === "confirmed" || booking.status === "completed"
                         ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400"
                         : "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400"
                     }`}
                   >
                     {booking.status === "pending"
                       ? "Menunggu Konfirmasi"
+                      : booking.status === "confirmed"
+                      ? "Terkonfirmasi"
                       : booking.status === "completed"
                       ? "Selesai"
                       : "Dibatalkan"}
@@ -245,24 +323,24 @@ function CekBookingContent() {
           {booking && (
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Button
-                onClick={() => router.push("/")}
+                onClick={() => router.push(`/${tenant.slug}/booking`)}
                 className="flex-1 py-4 text-base"
               >
-                Kembali ke Beranda
+                Halaman Booking
               </Button>
               <Button
-                onClick={() => router.push("/booking")}
+                onClick={() => router.push("/")}
                 variant="outline"
                 className="flex-1 py-4 text-base"
               >
-                Booking Kursimu
+                Kembali ke Beranda
               </Button>
             </div>
           )}
         </div>
       </main>
 
-      <Footer />
+      <TenantFooter tenantName={tenant.name} />
     </div>
   );
 }

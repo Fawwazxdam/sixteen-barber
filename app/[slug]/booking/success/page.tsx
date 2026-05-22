@@ -1,12 +1,15 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { Navbar } from "@/components/landing/layout/Navbar";
 import { Footer } from "@/components/landing/layout/Footer";
+import { TenantNavbar } from "@/components/landing/layout/TenantNavbar";
+import { TenantFooter } from "@/components/landing/layout/TenantFooter";
 import { Button } from "@/components/landing/ui/Button";
 import { getBooking } from "@/lib/api/bookings";
-import { CheckCircle, Calendar, Clock, User, Phone, Scissors } from "lucide-react";
+import { getTenantBySlug } from "@/lib/api/tenants";
+import { CheckCircle, Calendar, Clock, User, Phone, Scissors, MapPin } from "lucide-react";
 
 interface BookingDetails {
   id: string;
@@ -17,43 +20,66 @@ interface BookingDetails {
   customerPhone: string;
   customerNote: string | null;
   bookingDate: string;
-  status: "pending" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
   duration: number;
   createdAt: string;
   updatedAt: string;
 }
 
+interface Tenant {
+  id: string;
+  name: string;
+  slug: string;
+  address?: string;
+}
+
 function BookingSuccessContent() {
   const searchParams = useSearchParams();
+  const params = useParams();
   const router = useRouter();
+  
+  const slug = params?.slug as string;
   const bookingId = searchParams.get("id");
 
   const [booking, setBooking] = useState<BookingDetails | null>(null);
+  const [tenant, setTenant] = useState<Tenant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!slug) return;
     if (!bookingId) {
       setError("Booking ID tidak ditemukan");
       setLoading(false);
       return;
     }
 
-    const fetchBooking = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getBooking(bookingId);
-        const bookingData = (data as any)?.data || data;
-        setBooking(bookingData as BookingDetails);
+        const [bookingData, tenantData] = await Promise.all([
+          getBooking(bookingId),
+          getTenantBySlug(slug),
+        ]);
+
+        const resolvedBooking = (bookingData as any)?.data || bookingData;
+        
+        if (!tenantData) {
+          setError("Store tidak ditemukan");
+          return;
+        }
+
+        setBooking(resolvedBooking as BookingDetails);
+        setTenant(tenantData);
       } catch (err) {
-        console.error("Error fetching booking:", err);
-        setError("Gagal memuat detail booking");
+        console.error("Error fetching success page details:", err);
+        setError("Gagal memuat detail booking atau informasi store");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooking();
-  }, [bookingId]);
+    fetchData();
+  }, [bookingId, slug]);
 
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "Tanggal tidak tersedia";
@@ -110,7 +136,7 @@ function BookingSuccessContent() {
     );
   }
 
-  if (error || !booking) {
+  if (error || !booking || !tenant) {
     return (
       <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 text-gray-900 dark:text-white font-sans selection:bg-amber-200">
         <Navbar />
@@ -122,9 +148,9 @@ function BookingSuccessContent() {
             <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-3 uppercase tracking-tight">
               Terjadi Kesalahan
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mb-8">{error}</p>
+            <p className="text-gray-500 dark:text-gray-400 mb-8">{error || "Data tidak ditemukan."}</p>
             <Button
-              onClick={() => router.push("/booking")}
+              onClick={() => router.push(slug ? `/${slug}/booking` : "/")}
               className="w-full text-lg py-6"
             >
               Kembali ke Booking
@@ -138,7 +164,7 @@ function BookingSuccessContent() {
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 text-gray-900 dark:text-white font-sans selection:bg-amber-200">
-      <Navbar />
+      <TenantNavbar tenantName={tenant.name} tenantSlug={tenant.slug} />
 
       <main className="pt-32 pb-20 px-6">
         <div className="max-w-xl mx-auto">
@@ -152,8 +178,14 @@ function BookingSuccessContent() {
               Booking Berhasil!
             </h1>
             <p className="text-gray-500 dark:text-gray-400 font-medium">
-              Terima kasih, <span className="text-amber-600 dark:text-amber-400 font-bold">{booking.customerName}</span>! Booking kamu telah kami terima.
+              Terima kasih, <span className="text-amber-600 dark:text-amber-400 font-bold">{booking.customerName}</span>! Booking kamu di <span className="text-amber-600 dark:text-amber-400 font-bold">{tenant.name}</span> telah kami terima.
             </p>
+            {tenant.address && (
+              <p className="text-xs text-gray-400 mt-2 flex items-center justify-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                {tenant.address}
+              </p>
+            )}
           </div>
 
           {/* Booking Details */}
@@ -222,13 +254,15 @@ function BookingSuccessContent() {
                   className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                     booking.status === "pending"
                       ? "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-400"
-                      : booking.status === "completed"
+                      : booking.status === "confirmed" || booking.status === "completed"
                       ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400"
                       : "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400"
                   }`}
                 >
                   {booking.status === "pending"
                     ? "Menunggu Konfirmasi"
+                    : booking.status === "confirmed"
+                    ? "Terkonfirmasi"
                     : booking.status === "completed"
                     ? "Selesai"
                     : "Dibatalkan"}
@@ -240,23 +274,23 @@ function BookingSuccessContent() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
-              onClick={() => router.push("/")}
+              onClick={() => router.push(`/${tenant.slug}/booking`)}
               className="flex-1 py-4 text-base"
             >
-              Kembali ke Beranda
+              Halaman Booking
             </Button>
             <Button
-              onClick={() => router.push("/booking")}
+              onClick={() => router.push("/")}
               variant="outline"
               className="flex-1 py-4 text-base"
             >
-              Booking Lagi
+              Kembali ke Beranda
             </Button>
           </div>
         </div>
       </main>
 
-      <Footer />
+      <TenantFooter tenantName={tenant.name} />
     </div>
   );
 }

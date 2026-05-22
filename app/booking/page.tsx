@@ -2,13 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Header from "@/components/barber/layout/Header";
-import Footer from "@/components/barber/layout/Footer";
-import { Button } from "../../components/ui/button";
-import Input from "@/components/barber/ui/Input";
-import Select from "@/components/barber/ui/Select";
-import Textarea from "@/components/barber/ui/Textarea";
-import { idrFormat } from "../../lib/utils";
+import { Navbar } from "@/components/landing/layout/Navbar";
+import { Footer } from "@/components/landing/layout/Footer";
+import { Button } from "@/components/landing/ui/Button";
+import { idrFormat } from "@/lib/utils";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -50,8 +47,8 @@ const Booking = () => {
   const [availableSlots, setAvailableSlots] = useState<
     { start: string; end: string }[]
   >([]);
+  const [slotMessage, setSlotMessage] = useState<string | null>(null);
 
-  console.log({availableSlots})
   const [slotLoading, setSlotLoading] = useState(false);
 
   useEffect(() => {
@@ -87,6 +84,7 @@ const Booking = () => {
   useEffect(() => {
     if (!formData.barber || !formData.date) {
       setAvailableSlots([]);
+      setSlotMessage(null);
       return;
     }
 
@@ -102,10 +100,13 @@ const Booking = () => {
         );
 
         const slots = res.data?.data || res.data || [];
+        const message = res.data?.message || null;
         setAvailableSlots(Array.isArray(slots) ? slots : []);
+        setSlotMessage(message);
       } catch (err) {
         toast.error("Gagal memuat slot waktu");
         setAvailableSlots([]);
+        setSlotMessage(null);
       } finally {
         setSlotLoading(false);
       }
@@ -159,7 +160,6 @@ const Booking = () => {
       );
 
       toast.success("Pesanan berhasil dibuat!");
-      // Handle both direct response and wrapped response { status, data }
       const responseData = response.data.data || response.data;
       const bookingId = responseData?.id || responseData?.booking?.id;
       if (bookingId) {
@@ -191,94 +191,104 @@ const Booking = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 via-yellow-50 to-orange-100 relative">
-      {/* Vintage texture overlay */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-        }}
-      ></div>
+    <div className="min-h-screen bg-neutral-50 text-gray-900 dark:bg-neutral-900 dark:text-white font-sans selection:bg-amber-200">
+      <Navbar />
 
-      <Header />
-
-      <main className="relative z-10 pt-24 pb-12">
-        <div className="mx-auto px-6">
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-8 border border-amber-200/50">
-            <h1 className="text-3xl font-bold mb-8 text-center text-amber-900 font-playfair">
-              Booking Kursimu
+      <main className="pt-32 pb-20 relative z-10">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="inline-block text-amber-600 font-bold text-xs uppercase tracking-widest mb-4 dark:text-amber-400">
+              Reservasi Online
+            </span>
+            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight dark:text-white uppercase">
+              Booking Jadwal Cukur
             </h1>
-            <form onSubmit={handleSubmit} className="space-y-6">
+          </div>
+
+          <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8 md:p-10">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid md:grid-cols-2 gap-6">
-                <Input
-                  label="Nama"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-                <Select
-                  label="Tukang Cukur"
-                  name="barber"
-                  value={formData.barber}
-                  onChange={handleChange}
-                  options={barberOptions}
-                  required
-                  disabled={loading}
-                />
-                {loading && (
-                  <p className="text-sm text-amber-600 mt-1">
-                    Memuat tukang cukur...
-                  </p>
-                )}
-                {error && (
-                  <p className="text-sm text-red-600 mt-1">
-                    Error memuat tukang cukur: {error}
-                  </p>
-                )}
+                <div className="space-y-2">
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                    Nama
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                    Tukang Cukur
+                  </label>
+                  <select
+                    name="barber"
+                    value={formData.barber}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none disabled:opacity-50"
+                  >
+                    <option value="" disabled>Pilih Tukang Cukur</option>
+                    {barberOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  {loading && <p className="text-xs text-amber-600 mt-1">Memuat...</p>}
+                  {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+                </div>
               </div>
+
               <div className="grid md:grid-cols-2 gap-6">
-                <Input
-                  label="Telepon"
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-                <Select
-                  label="Layanan"
-                  name="service"
-                  value={formData.service}
-                  onChange={handleChange}
-                  options={serviceOptions}
-                  required
-                  disabled={loading}
-                />
-                {loading && (
-                  <p className="text-sm text-amber-600 mt-1">
-                    Memuat layanan...
-                  </p>
-                )}
-                {error && (
-                  <p className="text-sm text-red-600 mt-1">
-                    Error memuat layanan: {error}
-                  </p>
-                )}
+                <div className="space-y-2">
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                    Telepon
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                    Layanan
+                  </label>
+                  <select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none disabled:opacity-50"
+                  >
+                    <option value="" disabled>Pilih Layanan</option>
+                    {serviceOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-amber-900">
+                <div className="space-y-2">
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
                     Tanggal Pilihan
                   </label>
                   {/* Mobile: DayPicker */}
-                  <div className="md:hidden">
+                  <div className="md:hidden flex justify-center">
                     <DayPicker
                       mode="single"
                       selected={formData.date}
                       onSelect={(date) => setFormData({ ...formData, date })}
-                      className="border border-amber-300 rounded-lg p-4 bg-white text-amber-900"
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-neutral-50 dark:bg-neutral-900 dark:text-white"
                       disabled={{ before: new Date() }}
                     />
                   </div>
@@ -287,76 +297,75 @@ const Booking = () => {
                     <input
                       type="date"
                       name="date"
-                      value={
-                        formData.date
-                          ? formData.date.toISOString().split("T")[0]
-                          : ""
-                      }
+                      value={formData.date ? formData.date.toISOString().split("T")[0] : ""}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          date: e.target.value
-                            ? new Date(e.target.value)
-                            : undefined,
+                          date: e.target.value ? new Date(e.target.value) : undefined,
                         })
                       }
                       min={new Date().toISOString().split("T")[0]}
                       required
-                      className="w-full px-4 py-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors bg-white text-amber-900"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none"
                     />
                   </div>
                 </div>
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-amber-900">
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
                     Slot Tersedia
                   </label>
-
-                  {slotLoading && (
-                    <p className="text-sm text-amber-600">Memuat slot...</p>
-                  )}
-
+                  
+                  {slotLoading && <p className="text-sm text-amber-600 font-medium">Memuat slot...</p>}
                   {!slotLoading && availableSlots.length === 0 && (
-                    <p className="text-sm text-red-600">
-                      Tidak ada slot tersedia
+                    <p className="text-sm text-red-500 font-medium">
+                      {slotMessage || "Tidak ada slot tersedia"}
                     </p>
                   )}
 
                   <div className="grid grid-cols-3 gap-2">
                     {availableSlots.map((slot) => {
-                      const time = new Date(slot.start)
-                        .toTimeString()
-                        .slice(0, 5);
-
+                      const time = new Date(slot.start).toTimeString().slice(0, 5);
+                      const isSelected = formData.time === time;
                       return (
-                        <Button
+                        <button
                           key={slot.start}
                           type="button"
-                          variant={
-                            formData.time === time ? "default" : "outline"
-                          }
                           onClick={() => setFormData({ ...formData, time })}
+                          className={`py-2 rounded-lg text-sm font-bold transition-all ${
+                            isSelected 
+                              ? "bg-amber-500 text-white border border-amber-500 shadow-md scale-105" 
+                              : "bg-neutral-50 dark:bg-neutral-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-amber-500 dark:hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400"
+                          }`}
                         >
                           {time}
-                        </Button>
+                        </button>
                       );
                     })}
                   </div>
                 </div>
               </div>
-              <Textarea
-                label="Pesan Tambahan"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={4}
-              />
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                  Pesan Tambahan
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-neutral-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors outline-none"
+                />
+              </div>
+
               <Button
                 type="submit"
-                variant="default"
-                className="w-full text-lg py-3 bg-amber-700 hover:bg-amber-800 text-white rounded-lg font-medium"
+                size="lg"
                 disabled={submitting}
+                className="w-full text-lg py-6 mt-4"
               >
-                {submitting ? "Membuat Booking..." : "Booking Kursimu"}
+                {submitting ? "Memproses..." : "Konfirmasi Booking"}
               </Button>
             </form>
           </div>

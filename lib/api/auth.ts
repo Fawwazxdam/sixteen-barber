@@ -38,7 +38,6 @@ export async function login(data: { email: string; password: string }) {
 export async function getMe(cookieHeader?: string) {
   if (cookieHeader) {
     const result = await apiFetchServer<MeResponse>("/auth/me", cookieHeader);
-    console.log("getMe result:", result);
     return result;
   }
   return apiFetch<MeResponse>("/auth/me");
