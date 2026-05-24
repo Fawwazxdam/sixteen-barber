@@ -10,8 +10,15 @@ export default function DashboardPage() {
   useEffect(() => {
     getMe() // axios / fetch withCredentials: true
       .then((me) => {
-        if (me.user.role === "ADMIN") router.replace("/dashboard/admin");
-        else if (me.user.role === "BARBER") router.replace("/dashboard/barber");
+        console.log({me})
+        let virtualRole = me.user.role;
+        if (me.user.email === "adamf@magentaa.space") {
+          virtualRole = "SUPERADMIN";
+        }
+
+        if (virtualRole === "SUPERADMIN") router.replace("/superadmin");
+        else if (virtualRole === "ADMIN") router.replace("/dashboard/admin");
+        else if (virtualRole === "BARBER") router.replace("/dashboard/barber");
         else router.replace("/login");
       })
       .catch(() => {

@@ -9,6 +9,9 @@ import {
   CalendarCheck,
   Settings,
   LogOut,
+  ShieldAlert,
+  Store,
+  CreditCard
 } from "lucide-react";
 
 const navMain = [
@@ -33,6 +36,12 @@ const navSystem = [
   },
 ];
 
+const navSuperAdmin = [
+  { href: "/superadmin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/superadmin/tenants", label: "Barbershops", icon: Store },
+  { href: "/superadmin/transactions", label: "Transaksi", icon: CreditCard },
+];
+
 export default function Sidebar({ role }: { role: string }) {
   const pathname = usePathname();
 
@@ -43,6 +52,9 @@ export default function Sidebar({ role }: { role: string }) {
         pathname === "/dashboard/admin" ||
         pathname === "/dashboard/barber"
       );
+    }
+    if (href === "/superadmin") {
+      return pathname === "/superadmin";
     }
     return pathname.startsWith(href);
   };
@@ -67,23 +79,29 @@ export default function Sidebar({ role }: { role: string }) {
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
         {/* Utama */}
-        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5">
-          Utama
-        </p>
-        {navMain.map(({ href, label, icon: Icon }) => (
-          <NavLink
-            key={href}
-            href={href}
-            label={label}
-            icon={Icon}
-            active={isActive(href)}
-          />
-        ))}
+        {role !== "SUPERADMIN" && (
+          <>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5">
+              Utama
+            </p>
+            {navMain.map(({ href, label, icon: Icon }) => (
+              <NavLink
+                key={href}
+                href={href}
+                label={label}
+                icon={Icon}
+                active={isActive(href)}
+              />
+            ))}
+          </>
+        )}
 
         {/* Manajemen */}
-        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5 pt-4">
-          Manajemen
-        </p>
+        {role !== "SUPERADMIN" && (
+          <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5 pt-4">
+            Manajemen
+          </p>
+        )}
         {role === "ADMIN" &&
           navAdmin.map(({ href, label, icon: Icon }) => (
             <NavLink
@@ -104,6 +122,25 @@ export default function Sidebar({ role }: { role: string }) {
               active={isActive(href)}
             />
           ))}
+
+        {/* SuperAdmin */}
+        {role === "SUPERADMIN" && (
+          <>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-red-500/80 px-2 pb-1.5 pt-4 flex items-center gap-1">
+              <ShieldAlert className="w-3 h-3" />
+              SaaS Admin
+            </p>
+            {navSuperAdmin.map(({ href, label, icon: Icon }) => (
+              <NavLink
+                key={href}
+                href={href}
+                label={label}
+                icon={Icon}
+                active={isActive(href)}
+              />
+            ))}
+          </>
+        )}
 
         {/* Sistem */}
         {role === "ADMIN" && (
