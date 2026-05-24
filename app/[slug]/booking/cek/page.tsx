@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { TenantNavbar } from "@/components/landing/layout/TenantNavbar";
 import { TenantFooter } from "@/components/landing/layout/TenantFooter";
 import { Button } from "@/components/landing/ui/Button";
+import { FloatingWhatsApp } from "@/components/landing/ui/FloatingWhatsApp";
 import { getBooking } from "@/lib/api/bookings";
 import { getTenantBySlug } from "@/lib/api/tenants";
 import { CheckCircle, Calendar, Clock, User, Phone, Scissors, Search, MapPin } from "lucide-react";
@@ -29,6 +30,7 @@ interface Tenant {
   name: string;
   slug: string;
   address?: string;
+  phone?: string;
 }
 
 function CekBookingContent() {
@@ -341,6 +343,7 @@ function CekBookingContent() {
       </main>
 
       <TenantFooter tenantName={tenant.name} />
+      <FloatingWhatsApp phoneNumber={tenant.phone} tenantName={tenant.name} />
     </div>
   );
 }

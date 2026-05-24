@@ -7,6 +7,7 @@ import { Footer } from "@/components/landing/layout/Footer";
 import { TenantNavbar } from "@/components/landing/layout/TenantNavbar";
 import { TenantFooter } from "@/components/landing/layout/TenantFooter";
 import { Button } from "@/components/landing/ui/Button";
+import { FloatingWhatsApp } from "@/components/landing/ui/FloatingWhatsApp";
 import { idrFormat } from "@/lib/utils";
 import { getTenantBySlug } from "@/lib/api/tenants";
 import { DayPicker } from "react-day-picker";
@@ -35,6 +36,7 @@ interface Tenant {
     name: string;
     slug: string;
     address?: string;
+    phone?: string;
 }
 
 const Booking = () => {
@@ -463,6 +465,7 @@ const Booking = () => {
             </main>
 
             <TenantFooter tenantName={tenant.name} />
+            <FloatingWhatsApp phoneNumber={tenant.phone} tenantName={tenant.name} />
         </div>
     );
 };

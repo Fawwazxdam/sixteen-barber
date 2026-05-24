@@ -48,9 +48,9 @@ export default function Sidebar({ role }: { role: string }) {
   };
 
   return (
-    <aside className="w-56 bg-yellow-950 flex flex-col border-r border-amber-900/20 hidden md:flex">
+    <aside className="w-56 bg-yellow-950 dark:bg-neutral-900 flex flex-col border-r border-amber-900/20 dark:border-neutral-800 hidden md:flex transition-colors duration-300">
       {/* Logo */}
-      <div className="p-5 flex items-center gap-3 border-b border-amber-900/20">
+      <div className="p-5 flex items-center gap-3 border-b border-amber-900/20 dark:border-neutral-800">
         <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
           <Scissors className="w-4 h-4 text-white" strokeWidth={2} />
         </div>
@@ -67,7 +67,7 @@ export default function Sidebar({ role }: { role: string }) {
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
         {/* Utama */}
-        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 px-2 pb-1.5">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5">
           Utama
         </p>
         {navMain.map(({ href, label, icon: Icon }) => (
@@ -81,7 +81,7 @@ export default function Sidebar({ role }: { role: string }) {
         ))}
 
         {/* Manajemen */}
-        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 px-2 pb-1.5 pt-4">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5 pt-4">
           Manajemen
         </p>
         {role === "ADMIN" &&
@@ -108,7 +108,7 @@ export default function Sidebar({ role }: { role: string }) {
         {/* Sistem */}
         {role === "ADMIN" && (
           <>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 px-2 pb-1.5 pt-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700/60 dark:text-neutral-500 px-2 pb-1.5 pt-4">
               Sistem
             </p>
             {navSystem.map(({ href, label, icon: Icon }) => (
@@ -125,11 +125,11 @@ export default function Sidebar({ role }: { role: string }) {
       </nav>
 
       {/* Logout */}
-      <div className="px-3 py-4 border-t border-amber-900/20">
+      <div className="px-3 py-4 border-t border-amber-900/20 dark:border-neutral-800">
         <button
           className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg
-            text-red-400/60 text-sm font-medium
-            hover:text-red-300 hover:bg-red-900/20 hover:border-red-900/30
+            text-red-400/60 dark:text-red-500/70 text-sm font-medium
+            hover:text-red-300 dark:hover:text-red-400 hover:bg-red-900/20 dark:hover:bg-red-950/30 hover:border-red-900/30 dark:hover:border-red-900/50
             border border-transparent transition-all duration-200"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
@@ -157,8 +157,8 @@ function NavLink({
       className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium
         border transition-all duration-200
         ${active
-          ? "text-white bg-white/[0.14] border-amber-600/35"
-          : "text-amber-100/50 border-transparent hover:text-amber-100 hover:bg-white/[0.08] hover:border-amber-900/30"
+          ? "text-white dark:text-amber-500 bg-white/[0.14] dark:bg-amber-500/10 border-amber-600/35 dark:border-amber-500/20"
+          : "text-amber-100/50 dark:text-neutral-400 border-transparent hover:text-amber-100 dark:hover:text-neutral-200 hover:bg-white/[0.08] dark:hover:bg-white/5 hover:border-amber-900/30 dark:hover:border-neutral-700"
         }`}
     >
       {active && (
