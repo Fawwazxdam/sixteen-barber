@@ -14,9 +14,9 @@ export default function LandingPage() {
       
       <main className="pt-20">
         <HeroSection />
-        <FeaturesSection /> {/* Copas bagian <section> fitur dari HTML kesini */}
-        <PricingSection />  {/* Copas bagian <section> harga dari HTML kesini */}
-        {/* <CtaSection />      Copas bagian <section> CTA hitam dari HTML kesini */}
+        <FeaturesSection />
+        <PricingSection />
+        {/* <CtaSection /> */}
       </main>
 
       <Footer />

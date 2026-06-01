@@ -7,7 +7,7 @@ import {
   getCurrentTenant,
   getTenants,
 } from "@/lib/api/tenants";
-import type { Tenant, UpdateTenantData, TenantStats } from "@/types/tenants"; // Pastikan UpdateTenantData di-import
+import type { Tenant, UpdateTenantData, TenantStats } from "@/types/tenants";
 
 export default function StoreSettingsPage() {
   const [tenant, setTenant] = useState<Tenant | null>(null);
@@ -17,7 +17,6 @@ export default function StoreSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Gunakan UpdateTenantData agar strict sesuai dengan apa yang bisa di-update
   const [formData, setFormData] = useState<UpdateTenantData>({});
 
   async function loadData() {
@@ -25,13 +24,7 @@ export default function StoreSettingsPage() {
     try {
       console.log("Attempting to fetch current tenant...");
 
-      // Karena getTenantStats dan getTenants juga asinkron dan tidak bergantung satu sama lain,
-      // kita bisa fetch ketiganya secara paralel (opsional, tapi lebih cepat).
-      // Untuk amannya, kita fetch currentTenant dulu, baru sisanya.
-
       const currentTenant = await getCurrentTenant();
-
-      // TypeScript safety check
       if (!currentTenant || !currentTenant.id) {
         throw new Error("Invalid or missing tenant data");
       }
@@ -314,8 +307,7 @@ export default function StoreSettingsPage() {
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
                   Store URL:{" "}
-                  {typeof window !== "undefined" ? window.location.origin : ""}
-                  /barber/{tenant.slug}
+                  {typeof window !== "undefined" ? window.location.origin : ""}/{tenant.slug}
                 </p>
               </div>
             </div>

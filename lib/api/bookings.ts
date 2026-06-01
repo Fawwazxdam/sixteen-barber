@@ -8,6 +8,7 @@ export type DashboardStats = {
     serviceName: string;
     count: number;
   }[];
+  todayRevenue?: number;
 };
 
 export type Booking = {
@@ -64,6 +65,7 @@ export type BarberDashboardStats = {
     status: "pending" | "confirmed";
     duration: number;
   }[];
+  todayRevenue?: number;
 };
 
 export async function getBarberDashboardStats(barberId: string) {

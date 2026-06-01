@@ -8,6 +8,7 @@ import {
   Scissors,
   Loader2,
   AlertCircle,
+  Wallet,
 } from "lucide-react";
 
 type DashboardStats = {
@@ -18,6 +19,7 @@ type DashboardStats = {
     serviceName: string;
     count: number;
   }[];
+  todayRevenue?: number;
 };
 
 export default function AdminDashboard() {
@@ -71,7 +73,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Today's Bookings */}
         <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 group hover:shadow-lg hover:-translate-y-1 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all duration-300 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-transparent group-hover:bg-amber-500 transition-colors duration-300" />
@@ -106,6 +108,29 @@ export default function AdminDashboard() {
             </div>
             <div className="bg-emerald-50 dark:bg-emerald-500/10 group-hover:bg-emerald-500 transition-colors duration-300 p-4 rounded-full">
               <CheckCircle className="w-7 h-7 text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors duration-300" />
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Revenue */}
+        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 group hover:shadow-lg hover:-translate-y-1 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all duration-300 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-transparent group-hover:bg-amber-500 transition-colors duration-300" />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Pendapatan Hari Ini
+              </p>
+              <p className="text-3xl font-black text-gray-900 dark:text-white mt-2">
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                }).format(stats?.todayRevenue ?? 0)}
+              </p>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-500/10 group-hover:bg-blue-500 transition-colors duration-300 p-4 rounded-full">
+              <Wallet className="w-7 h-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors duration-300" />
             </div>
           </div>
         </div>

@@ -1,44 +1,49 @@
 // src/components/sections/PricingSection.tsx
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/landing/ui/Button";
+import Link from "next/link";
 
 const plans = [
   {
-    name: "Basic",
-    price: "150rb",
+    id: "starter",
+    name: "Starter",
+    price: "99rb",
     features: [
       "Maksimal 2 Kapster",
-      "Laporan Harian",
-      "Kasir Offline & Online",
+      "Link Booking Mandiri",
+      "Dashboard Admin Utama",
+      "Dukungan Email",
     ],
     buttonVariant: "outline" as const,
-    buttonText: "Pilih Paket",
+    buttonText: "Pilih Starter",
     isPopular: false,
   },
   {
+    id: "professional",
     name: "Professional",
-    price: "350rb",
+    price: "199rb",
     features: [
       "Maksimal 5 Kapster",
-      "Booking Online Mandiri",
-      "Manajemen Inventaris",
-      "Loyalty Points Program",
+      "Notifikasi WhatsApp Otomatis",
+      "Dashboard Kapster Pribadi",
+      "Laporan Pendapatan Harian",
     ],
     buttonVariant: "default" as const,
     buttonText: "Mulai Langganan",
     isPopular: true,
   },
   {
+    id: "enterprise",
     name: "Enterprise",
-    price: "750rb",
+    price: "399rb",
     features: [
       "Kapster Tanpa Batas",
-      "Multi-Cabang (Hingga 5)",
-      "API Integrasi Custom",
-      "Priority Support 24/7",
+      "Dukungan Multi-Cabang",
+      "Custom Logo & Tema",
+      "Ekspor Laporan Excel/CSV",
     ],
     buttonVariant: "outline" as const,
-    buttonText: "Hubungi Sales",
+    buttonText: "Pilih Enterprise",
     isPopular: false,
   },
 ];
@@ -115,17 +120,19 @@ export function PricingSection() {
               </ul>
 
               {/* Tombol outline hover seragam dengan warna amber */}
-              <Button
-                variant={plan.buttonVariant}
-                className={`w-full py-4 transition-all duration-300
-                  ${
-                    plan.buttonVariant === "outline"
-                      ? "hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:border-amber-400 dark:hover:text-amber-400 dark:hover:bg-amber-500/10"
-                      : ""
-                  }`}
-              >
-                {plan.buttonText}
-              </Button>
+              <Link href={`/register?plan=${plan.id}`} className="block w-full mt-auto">
+                <Button
+                  variant={plan.buttonVariant}
+                  className={`w-full py-4 transition-all duration-300
+                    ${
+                      plan.buttonVariant === "outline"
+                        ? "hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:border-amber-400 dark:hover:text-amber-400 dark:hover:bg-amber-500/10"
+                        : ""
+                    }`}
+                >
+                  {plan.buttonText}
+                </Button>
+              </Link>
             </div>
           ))}
         </div>

@@ -17,6 +17,7 @@ export default function UsersPage() {
       .then((data) => setBarbers(data))
       .finally(() => setLoading(false));
   }, []);
+  console.log({barbers})
 
   function getBarberImage(barber: Barber): string | null {
     if (barber.media?.[0]?.url) {

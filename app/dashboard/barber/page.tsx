@@ -20,6 +20,9 @@ import {
   ChevronUp,
   Check,
   X,
+  Loader2,
+  AlertCircle,
+  Wallet,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { idrFormat } from "@/lib/utils";
@@ -152,73 +155,98 @@ export default function BarberDashboard() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Barber Dashboard</h1>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500">Loading...</p>
-        </div>
+      <div className="flex flex-col items-center justify-center h-[60vh] text-gray-500 dark:text-gray-400">
+        <Loader2 className="w-10 h-10 animate-spin text-amber-500 mb-4" />
+        <p className="font-medium animate-pulse">Memuat data dashboard...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Barber Dashboard</h1>
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
-        </div>
+      <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-400 px-6 py-4 rounded-xl flex items-center gap-3 shadow-sm max-w-7xl mx-auto">
+        <AlertCircle className="w-5 h-5 shrink-0" />
+        <p className="font-medium">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Barber Dashboard</h1>
-
-      {/* Welcome message */}
-      <p className="text-gray-600 mb-6">
-        Halo, {user?.name}! Ini ringkasan aktivitas kamu hari ini.
-      </p>
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+          Dashboard Barber
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">
+          Halo, {user?.name}! Ini ringkasan aktivitas dan jadwal Anda hari ini.
+        </p>
+      </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Today's Bookings */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 group hover:shadow-lg hover:-translate-y-1 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all duration-300 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-transparent group-hover:bg-amber-500 transition-colors duration-300" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Booking Hari Ini</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Booking Hari Ini
+              </p>
+              <p className="text-4xl font-black text-gray-900 dark:text-white mt-2">
                 {stats?.todayBookings ?? 0}
               </p>
             </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Calendar className="w-6 h-6 text-blue-600" />
+            <div className="bg-amber-50 dark:bg-amber-500/10 group-hover:bg-amber-500 transition-colors duration-300 p-4 rounded-full">
+              <Calendar className="w-7 h-7 text-amber-600 dark:text-amber-400 group-hover:text-white transition-colors duration-300" />
             </div>
           </div>
         </div>
 
         {/* Completed Today */}
-        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 group hover:shadow-lg hover:-translate-y-1 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all duration-300 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-transparent group-hover:bg-amber-500 transition-colors duration-300" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Selesai Hari Ini</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Selesai Hari Ini
+              </p>
+              <p className="text-4xl font-black text-gray-900 dark:text-white mt-2">
                 {stats?.completedBookingsToday ?? 0}
               </p>
             </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <CheckCircle className="w-6 h-6 text-green-600" />
+            <div className="bg-emerald-50 dark:bg-emerald-500/10 group-hover:bg-emerald-500 transition-colors duration-300 p-4 rounded-full">
+              <CheckCircle className="w-7 h-7 text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors duration-300" />
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Revenue */}
+        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 group hover:shadow-lg hover:-translate-y-1 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all duration-300 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-transparent group-hover:bg-amber-500 transition-colors duration-300" />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Pendapatan Hari Ini
+              </p>
+              <p className="text-3xl font-black text-gray-900 dark:text-white mt-2">
+                {idrFormat(stats?.todayRevenue ?? 0)}
+              </p>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-500/10 group-hover:bg-blue-500 transition-colors duration-300 p-4 rounded-full">
+              <Wallet className="w-7 h-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors duration-300" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Range Bookings Section (Accordion) */}
-      <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
-        <div className="flex items-center gap-2 mb-6">
-          <Clock className="w-5 h-5 text-yellow-600" />
-          <h2 className="text-lg font-semibold text-gray-900">
+      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 lg:p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-neutral-100 dark:bg-neutral-800 p-2 rounded-lg">
+            <Clock className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Jadwal Booking (-7 s/d +7 Hari)
           </h2>
         </div>
@@ -238,7 +266,7 @@ export default function BarberDashboard() {
               return (
                 <div
                   key={dateStr}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-colors duration-200 bg-white dark:bg-neutral-900"
                 >
                   {/* Accordion Header */}
                   <button
@@ -248,51 +276,52 @@ export default function BarberDashboard() {
                         [dateStr]: !prev[dateStr],
                       }))
                     }
-                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition text-left"
+                    className="w-full flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-800/40 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left border-b border-transparent data-[expanded=true]:border-gray-200 dark:data-[expanded=true]:border-gray-800"
+                    data-expanded={isExpanded}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="font-semibold text-gray-800">
+                    <div className="flex items-center flex-wrap gap-3">
+                      <span className="font-semibold text-gray-900 dark:text-white">
                         {displayDate}
                       </span>
-                      <span className="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2.5 py-1 rounded-full font-medium">
                         {dayBookings.length} Booking
                       </span>
                       {pendingCount > 0 && (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold animate-pulse">
+                        <span className="text-xs bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 px-2.5 py-1 rounded-full font-semibold animate-pulse">
                           {pendingCount} Menunggu Konfirmasi
                         </span>
                       )}
                     </div>
                     {isExpanded ? (
-                      <ChevronUp className="w-5 h-5 text-gray-500" />
+                      <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500" />
+                      <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     )}
                   </button>
 
                   {/* Accordion Content */}
                   {isExpanded && (
-                    <div className="p-4 bg-white border-t border-gray-200 space-y-4">
+                    <div className="p-4 sm:p-5 bg-white dark:bg-neutral-900 space-y-4">
                       {dayBookings.map((booking) => (
                         <div
                           key={booking.id}
-                          className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-neutral-50 rounded-lg gap-4 border border-gray-100 hover:border-gray-200 transition"
+                          className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-800/20 rounded-xl gap-4 border border-gray-100 dark:border-gray-800/50 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-200"
                         >
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <User className="w-4 h-4 text-gray-500" />
-                              <span className="font-medium text-gray-900">
+                            <div className="flex items-center gap-2 mb-2.5">
+                              <User className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                              <span className="font-semibold text-gray-900 dark:text-white">
                                 {booking.customerName}
                               </span>
                               <span
-                                className={`px-2.5 py-0.5 text-xs font-semibold rounded-full ${
+                                className={`px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase rounded-full ${
                                   booking.status === "pending"
-                                    ? "bg-yellow-100 text-yellow-700"
+                                    ? "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400"
                                     : booking.status === "confirmed"
-                                    ? "bg-blue-100 text-blue-700"
+                                    ? "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400"
                                     : booking.status === "completed"
-                                    ? "bg-green-100 text-green-700"
-                                    : "bg-red-100 text-red-700"
+                                    ? "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400"
+                                    : "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400"
                                 }`}
                               >
                                 {booking.status === "pending"
@@ -304,23 +333,23 @@ export default function BarberDashboard() {
                                   : "Dibatalkan"}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <Phone className="w-4 h-4 text-gray-500" />
-                              <span className="text-sm text-gray-600">
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {booking.customerPhone}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Scissors className="w-4 h-4 text-gray-500" />
-                              <span className="text-sm text-gray-600">
+                              <Scissors className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {booking.serviceName} - {idrFormat(booking.servicePrice)} ({booking.duration} menit)
                               </span>
                             </div>
                           </div>
 
-                          <div className="flex flex-col sm:items-end gap-3 justify-center">
-                            <div className="flex items-center gap-2 text-sm text-gray-500 font-medium bg-gray-100 px-3 py-1.5 rounded-md">
-                              <Clock className="w-4 h-4" />
+                          <div className="flex flex-col sm:items-end gap-3 justify-center mt-2 md:mt-0">
+                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 font-semibold bg-white dark:bg-neutral-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                              <Clock className="w-4 h-4 text-amber-500" />
                               <span>
                                 {new Date(booking.bookingDate).toLocaleTimeString("id-ID", {
                                   hour: "2-digit",
@@ -331,18 +360,18 @@ export default function BarberDashboard() {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                               {booking.status === "pending" && (
                                 <>
                                   <button
                                     onClick={() => handleUpdateStatus(booking.id, "confirmed")}
-                                    className="flex items-center gap-1 bg-green-600 hover:bg-green-750 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition shadow-sm"
+                                    className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
                                   >
                                     <Check className="w-3.5 h-3.5" /> Konfirmasi
                                   </button>
                                   <button
                                     onClick={() => handleUpdateStatus(booking.id, "cancelled")}
-                                    className="flex items-center gap-1 bg-white hover:bg-red-50 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-md transition border border-red-200"
+                                    className="flex items-center gap-1.5 bg-white dark:bg-neutral-800 hover:bg-red-50 dark:hover:bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-500/30 active:scale-95"
                                   >
                                     <X className="w-3.5 h-3.5" /> Tolak
                                   </button>
@@ -353,13 +382,13 @@ export default function BarberDashboard() {
                                 <>
                                   <button
                                     onClick={() => handleUpdateStatus(booking.id, "completed")}
-                                    className="flex items-center gap-1 bg-blue-600 hover:bg-blue-750 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition shadow-sm"
+                                    className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
                                   >
                                     <Check className="w-3.5 h-3.5" /> Selesaikan
                                   </button>
                                   <button
                                     onClick={() => handleUpdateStatus(booking.id, "cancelled")}
-                                    className="flex items-center gap-1 bg-white hover:bg-red-50 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-md transition border border-red-200"
+                                    className="flex items-center gap-1.5 bg-white dark:bg-neutral-800 hover:bg-red-50 dark:hover:bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all border border-gray-200 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-500/30 active:scale-95"
                                   >
                                     <X className="w-3.5 h-3.5" /> Batalkan
                                   </button>
@@ -376,9 +405,12 @@ export default function BarberDashboard() {
             })}
           </div>
         ) : (
-          <p className="text-gray-500 text-center py-8">
-            Tidak ada booking yang terdaftar untuk 7 hari ke belakang dan depan
-          </p>
+          <div className="text-center py-12 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+            <Calendar className="w-8 h-8 text-gray-400 mx-auto mb-3" />
+            <p className="text-gray-500 dark:text-gray-400 font-medium">
+              Tidak ada booking yang terdaftar untuk 7 hari ke belakang dan depan
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -50,8 +50,12 @@ export function Navbar() {
           <Link href="/cek-booking">
             <Button variant="ghost">Cek Booking</Button>
           </Link>
-          <Button variant="ghost"> <a href="/login">Login</a></Button>
-          <Button>Get Started</Button>
+          <Link href="/login">
+             <Button variant="ghost">Login</Button>
+           </Link>
+          <Link href="/register">
+             <Button>Get Started</Button>
+           </Link>
         </div>
       </div>
     </nav>
