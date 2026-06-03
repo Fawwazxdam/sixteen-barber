@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createService } from "@/lib/api/services";
-// import { PageHeader } from "../../components";
+import { getCurrentTenant } from "@/lib/api/tenants";
+import type { Tenant } from "@/types/tenants";
 import { PageHeader, FormCard, NumberInput, FormInput, FormActions } from "../../components";
+import { AlertCircle } from "lucide-react";
 
 export default function CreateServicePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [tenant, setTenant] = useState<Tenant | null>(null);
+
+  useEffect(() => {
+    getCurrentTenant().then(setTenant).catch(console.error);
+  }, []);
 
   const [form, setForm] = useState({
     name: "",
@@ -40,6 +47,18 @@ export default function CreateServicePage() {
         backHref="/dashboard/admin/services"
         backText="Kembali ke Daftar Layanan"
       />
+
+      {!tenant?.hasActiveSubscription && (
+        <div className="mb-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 p-4 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+          <div>
+            <h3 className="font-bold">Langganan Belum Aktif</h3>
+            <p className="text-sm mt-1">
+              Selesaikan pembayaran di menu <strong>Langganan</strong> untuk bisa menambahkan layanan baru.
+            </p>
+          </div>
+        </div>
+      )}
 
       <FormCard title="Tambah Layanan Baru" description="Lengkapi detail di bawah untuk menambahkan menu layanan barbershop." onSubmit={handleSubmit}>
         <FormInput
@@ -74,6 +93,7 @@ export default function CreateServicePage() {
 
         <FormActions
           loading={loading}
+          disabled={tenant !== null && !tenant?.hasActiveSubscription}
           onCancel={() => router.back()}
           submitText="Simpan Layanan"
         />

@@ -8,6 +8,7 @@ interface FormActionsProps {
   submitText?: string;
   cancelText?: string;
   loadingText?: string;
+  disabled?: boolean;
 }
 
 export function FormActions({
@@ -16,6 +17,7 @@ export function FormActions({
   submitText = "Simpan",
   cancelText = "Batal",
   loadingText = "Menyimpan...",
+  disabled = false,
 }: FormActionsProps) {
   return (
     <div className="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-800">
@@ -29,8 +31,12 @@ export function FormActions({
       </button>
       <button
         type="submit"
-        disabled={loading}
-        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-600 text-white font-medium hover:bg-amber-700 disabled:opacity-70 disabled:cursor-not-allowed transition-colors shadow-sm"
+        disabled={loading || disabled}
+        className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-medium transition-colors shadow-sm ${
+          disabled
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-amber-600 hover:bg-amber-700 disabled:opacity-70 disabled:cursor-not-allowed"
+        }`}
       >
         {loading ? (
           <>

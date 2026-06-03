@@ -30,6 +30,11 @@ const navBarber = [
 
 const navSystem = [
   {
+    href: "/dashboard/admin/billing",
+    label: "Langganan",
+    icon: CreditCard,
+  },
+  {
     href: "/dashboard/admin/store-settings",
     label: "Pengaturan Toko",
     icon: Settings,

@@ -5,13 +5,11 @@ import { apiFetch } from "@/lib/api/client";
 import {
   getTenantStats,
   getCurrentTenant,
-  getTenants,
 } from "@/lib/api/tenants";
 import type { Tenant, UpdateTenantData, TenantStats } from "@/types/tenants";
 
 export default function StoreSettingsPage() {
   const [tenant, setTenant] = useState<Tenant | null>(null);
-  const [allTenants, setAllTenants] = useState<Tenant[]>([]);
   const [stats, setStats] = useState<TenantStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,27 +37,17 @@ export default function StoreSettingsPage() {
       });
 
       // Ambil stats dan all tenants (Bisa diparalelkan)
-      const [statsData, allTenantsData] = await Promise.allSettled([
-        getTenantStats(currentTenant.id),
-        getTenants(),
-      ]);
-
-      if (statsData.status === "fulfilled" && statsData.value) {
-        setStats(statsData.value);
+      const statsData = await getTenantStats(currentTenant.id);
+      if (statsData) {
+        setStats(statsData);
       } else {
         // Fallback default
         setStats({
           barberCount: 0,
           bookingCount: 0,
           hasActiveSubscription: false,
-          subscription: null, // Pakai null, bukan undefined agar konsisten dengan BE
+          subscription: null,
         });
-      }
-
-      if (allTenantsData.status === "fulfilled" && allTenantsData.value) {
-        setAllTenants(allTenantsData.value);
-      } else {
-        setAllTenants([]);
       }
     } catch (error) {
       console.error("Failed to load store settings:", error);
@@ -313,41 +301,7 @@ export default function StoreSettingsPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow border border-gray-100 dark:border-gray-800 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              All Tenants
-            </h2>
-            {allTenants.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {allTenants.map((t) => (
-                  <div
-                    key={t.id}
-                    className={`p-4 rounded-xl border ${
-                      t.id === tenant?.id
-                        ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10"
-                        : "border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-neutral-800"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-gray-900 dark:text-white">{t.name}</h3>
-                      {t.id === tenant?.id && (
-                        <span className="text-xs px-2 py-0.5 bg-amber-600 text-white rounded-full">
-                          Current
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t.slug}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t.phone}</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 truncate">
-                      {t.address}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500 text-center py-4">No tenants found</p>
-            )}
-          </div>
+
         </div>
 
         <div className="space-y-6">

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTenantBySlug } from "@/lib/api/tenants";
 import Link from "next/link";
-import { MapPin, Phone, Clock, Calendar, Scissors, ChevronRight } from "lucide-react";
+import { MapPin, Phone, Clock, Calendar, Scissors, ChevronRight, AlertCircle } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -37,13 +37,23 @@ export default async function TenantRootPage({ params }: PageProps) {
             <Calendar className="w-4 h-4" />
             Cek Booking
           </Link>
-          <Link
-            href={`/${slug}/booking`}
-            className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-full transition-all hover:scale-105 active:scale-95"
-          >
-            <Calendar className="w-4 h-4" />
-            Reservasi Sekarang
-          </Link>
+          {tenant.hasActiveSubscription ? (
+            <Link
+              href={`/${slug}/booking`}
+              className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-full transition-all hover:scale-105 active:scale-95"
+            >
+              <Calendar className="w-4 h-4" />
+              Reservasi Sekarang
+            </Link>
+          ) : (
+            <button
+              disabled
+              className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 bg-neutral-600 text-neutral-300 font-semibold rounded-full cursor-not-allowed opacity-80"
+            >
+              <Calendar className="w-4 h-4" />
+              Reservasi Ditutup
+            </button>
+          )}
         </div>
       </nav>
 
@@ -69,6 +79,15 @@ export default async function TenantRootPage({ params }: PageProps) {
               </span>
             </div>
 
+            {!tenant.hasActiveSubscription && (
+              <div className="mb-6 inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/20 border border-red-500/50 backdrop-blur-md">
+                <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
+                <span className="text-red-100 font-medium text-sm md:text-base">
+                  Mohon maaf, Barbershop ini sedang tidak menerima jadwal reservasi online (Belum Aktif).
+                </span>
+              </div>
+            )}
+
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-[1.1] tracking-tight">
               Gaya Rambut Terbaik,<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">
@@ -81,13 +100,22 @@ export default async function TenantRootPage({ params }: PageProps) {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href={`/${slug}/booking`}
-                className="inline-flex justify-center items-center gap-2 px-8 py-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-all hover:shadow-[0_0_30px_-5px_rgba(217,119,6,0.5)] active:scale-95 text-lg"
-              >
-                Buat Janji Sekarang
-                <ChevronRight className="w-5 h-5" />
-              </Link>
+              {tenant.hasActiveSubscription ? (
+                <Link
+                  href={`/${slug}/booking`}
+                  className="inline-flex justify-center items-center gap-2 px-8 py-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-all hover:shadow-[0_0_30px_-5px_rgba(217,119,6,0.5)] active:scale-95 text-lg"
+                >
+                  Buat Janji Sekarang
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="inline-flex justify-center items-center gap-2 px-8 py-4 bg-neutral-700 text-neutral-400 font-bold rounded-xl cursor-not-allowed opacity-80 text-lg"
+                >
+                  Reservasi Ditutup
+                </button>
+              )}
               <a
                 href="#info"
                 className="inline-flex justify-center items-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all backdrop-blur-sm active:scale-95 text-lg"
@@ -155,12 +183,21 @@ export default async function TenantRootPage({ params }: PageProps) {
           <p className="text-lg text-neutral-400 mb-10 max-w-2xl mx-auto">
             Jangan biarkan antrian merusak harimu. Buat jadwal potong rambut sekarang juga dan nikmati layanan tanpa antre di <strong>{tenant.name}</strong>.
           </p>
-          <Link
-            href={`/${slug}/booking`}
-            className="inline-flex justify-center items-center gap-2 px-10 py-5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-all hover:shadow-[0_0_40px_-5px_rgba(217,119,6,0.6)] active:scale-95 text-xl"
-          >
-            Reservasi Jadwal Sekarang
-          </Link>
+          {tenant.hasActiveSubscription ? (
+            <Link
+              href={`/${slug}/booking`}
+              className="inline-flex justify-center items-center gap-2 px-10 py-5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-all hover:shadow-[0_0_40px_-5px_rgba(217,119,6,0.6)] active:scale-95 text-xl"
+            >
+              Reservasi Jadwal Sekarang
+            </Link>
+          ) : (
+            <button
+              disabled
+              className="inline-flex justify-center items-center gap-2 px-10 py-5 bg-neutral-700 text-neutral-400 font-bold rounded-xl cursor-not-allowed opacity-80 text-xl"
+            >
+              Reservasi Ditutup
+            </button>
+          )}
         </div>
       </section>
 

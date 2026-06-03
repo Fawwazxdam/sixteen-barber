@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createBarber, BarberScheduleItem } from "@/lib/api/users";
+import { getCurrentTenant } from "@/lib/api/tenants";
+import type { Tenant } from "@/types/tenants";
 import toast from "react-hot-toast";
+import { AlertCircle } from "lucide-react";
 import {
   PageHeader,
   FormCard,
@@ -15,6 +18,12 @@ import {
 
 export default function CreateBarberPage() {
   const router = useRouter();
+
+  const [tenant, setTenant] = useState<Tenant | null>(null);
+
+  useEffect(() => {
+    getCurrentTenant().then(setTenant).catch(console.error);
+  }, []);
 
   const [form, setForm] = useState({
     name: "",
@@ -76,6 +85,18 @@ export default function CreateBarberPage() {
         backHref="/dashboard/admin/users"
         backText="Kembali ke Daftar Barber"
       />
+
+      {!tenant?.hasActiveSubscription && (
+        <div className="mb-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 p-4 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+          <div>
+            <h3 className="font-bold">Langganan Belum Aktif</h3>
+            <p className="text-sm mt-1">
+              Selesaikan pembayaran di menu <strong>Langganan</strong> untuk bisa menambahkan kapster baru.
+            </p>
+          </div>
+        </div>
+      )}
 
       <FormCard title="Tambah Barber Baru" description="Lengkapi informasi dasar untuk menambahkan barber baru." onSubmit={handleSubmit}>
         {/* Profile Image Section */}
@@ -202,6 +223,7 @@ export default function CreateBarberPage() {
 
         <FormActions
           loading={saving}
+          disabled={tenant !== null && !tenant?.hasActiveSubscription}
           onCancel={() => router.back()}
           submitText="Tambah Barber"
         />

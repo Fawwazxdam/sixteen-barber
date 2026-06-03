@@ -11,6 +11,7 @@ export type Tenant = {
   closeTime: string;
   createdAt: string;
   updatedAt: string;
+  hasActiveSubscription?: boolean;
 };
 
 export type CreateTenantData = {
