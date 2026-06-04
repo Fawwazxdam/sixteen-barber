@@ -12,7 +12,6 @@ const plans = [
       "Maksimal 2 Kapster",
       "Link Booking Mandiri",
       "Dashboard Admin Utama",
-      "Dukungan Email",
     ],
     buttonVariant: "outline" as const,
     buttonText: "Pilih Starter",
@@ -24,7 +23,7 @@ const plans = [
     price: "199rb",
     features: [
       "Maksimal 5 Kapster",
-      "Notifikasi WhatsApp Otomatis",
+      "Notifikasi WhatsApp",
       "Dashboard Kapster Pribadi",
       "Laporan Pendapatan Harian",
     ],

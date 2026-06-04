@@ -2,7 +2,7 @@ import { apiFetch } from "./client";
 
 export type DashboardStats = {
   todayBookings: number;
-  completedBookings: number;
+  completedBookingsToday: number;
   topHaircuts: {
     serviceId: string;
     serviceName: string;
@@ -14,8 +14,10 @@ export type DashboardStats = {
 export type Booking = {
   id: string;
   barberId: string;
+  barberName?: string;
   serviceId: string;
   serviceName: string;
+  servicePrice?: number;
   customerName: string;
   customerPhone: string;
   customerNote: string | null;
@@ -36,13 +38,18 @@ export async function getBarberBookings(date: string, barberId: string) {
   );
 }
 
+export async function getTenantBookings(date: string) {
+  return apiFetch<Booking[]>(`/bookings/tenant?date=${date}`);
+}
+
 export async function updateBookingStatus(
   id: string, // ✅ ubah jadi string sesuai backend
-  status: "pending" | "confirmed" | "completed" | "cancelled"
+  status: "pending" | "confirmed" | "completed" | "cancelled",
+  paymentMethod?: "cash" | "qris" | "transfer" | "other"
 ) {
   return apiFetch<Booking>(`/bookings/${id}/status`, {
     method: "PATCH",
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, paymentMethod }),
   });
 }
 

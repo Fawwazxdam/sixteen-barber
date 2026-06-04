@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { formatIndonesianDateShort, generateWhatsAppLink } from "@/lib/utils";
 import {
-  getBarberBookings,
+  getTenantBookings,
   updateBookingStatus,
   type Booking,
 } from "@/lib/api/bookings";
@@ -15,11 +15,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar, Grid, List, Clock, User, Scissors, Check, X, CheckCircle2, MessageCircle } from "lucide-react";
+import { Calendar, Grid, List, Clock, User, Scissors, Check, X, CheckCircle2, BadgeCheck, MessageCircle } from "lucide-react";
 
 type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled";
 
-export default function BarberBookings() {
+export default function AdminTransactions() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [view, setView] = useState<"list" | "grid">("list");
   const [date, setDate] = useState<string>(
@@ -27,21 +27,17 @@ export default function BarberBookings() {
   );
   const [loading, setLoading] = useState(false);
 
-  const [barberId, setBarberId] = useState<string>("");
   const [checkoutBooking, setCheckoutBooking] = useState<Booking | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "qris" | "transfer">("cash");
-  console.log({bookings})
 
   const fetchBookings = async () => {
-    if (!barberId) return;
-
     setLoading(true);
     try {
-      const response = await getBarberBookings(date, barberId);
+      const response = await getTenantBookings(date);
       const bookingsData = (response as any)?.data || response;
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
     } catch (err: any) {
-      toast.error(err.message || "Gagal memuat booking");
+      toast.error(err.message || "Gagal memuat transaksi");
     } finally {
       setLoading(false);
     }
@@ -132,33 +128,17 @@ export default function BarberBookings() {
   };
 
   useEffect(() => {
-    const getCurrentBarber = async () => {
-      try {
-        const { getMe } = await import("@/lib/api/auth");
-        const user = await getMe();
-        if (user.user.role === "BARBER") {
-          setBarberId(user.user.id);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getCurrentBarber();
-  }, []);
-
-  useEffect(() => {
     fetchBookings();
-  }, [date, barberId]);
+  }, [date]);
 
   return (
-    <div className="p-6 space-y-6 text-foreground">
+    <div className="space-y-6 text-foreground animate-in fade-in duration-500">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Jadwal Booking</h1>
-          <p className="text-muted-foreground text-sm">
-            Kelola booking pelanggan Anda
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Sistem Kasir & Transaksi</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Kelola semua transaksi dan pembayaran dari semua Barber
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -211,20 +191,20 @@ export default function BarberBookings() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">Tidak ada booking untuk tanggal ini</p>
+            <p className="text-muted-foreground">Tidak ada transaksi untuk tanggal ini</p>
           </CardContent>
         </Card>
       ) : view === "list" ? (
         <Card>
           <CardHeader>
-            <CardTitle>Daftar Booking</CardTitle>
+            <CardTitle>Daftar Transaksi</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {bookings.map((b) => (
                 <div
                   key={b.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border bg-card text-card-foreground gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-neutral-900 text-card-foreground gap-4"
                 >
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-2">
@@ -252,12 +232,19 @@ export default function BarberBookings() {
                         Hubungi WA
                       </a>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
                       <Clock className="h-4 w-4" />
                       <span>{formatIndonesianDateShort(b.bookingDate)}</span>
                       <span className="text-border">•</span>
                       <Scissors className="h-4 w-4" />
                       <span>{b.serviceName}</span>
+                      {b.barberName && (
+                        <>
+                          <span className="text-border">•</span>
+                          <BadgeCheck className="h-4 w-4 text-primary" />
+                          <span className="font-medium text-primary">Barber: {b.barberName}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                   {renderActionButtons(b)}
@@ -269,7 +256,7 @@ export default function BarberBookings() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {bookings.map((b) => (
-            <Card key={b.id} className="flex flex-col">
+            <Card key={b.id} className="flex flex-col border-gray-200 dark:border-gray-800 bg-white dark:bg-neutral-900">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
@@ -309,6 +296,12 @@ export default function BarberBookings() {
                     <Scissors className="h-4 w-4" />
                     <span>{b.serviceName}</span>
                   </div>
+                  {b.barberName && (
+                    <div className="flex items-center gap-2 text-primary font-medium bg-primary/10 w-fit px-2 py-1 rounded-md">
+                      <BadgeCheck className="h-4 w-4" />
+                      <span>Barber: {b.barberName}</span>
+                    </div>
+                  )}
                 </div>
                 {renderActionButtons(b)}
               </CardContent>
@@ -332,6 +325,12 @@ export default function BarberBookings() {
                   <span className="text-muted-foreground">Pelanggan</span>
                   <span className="font-semibold">{checkoutBooking.customerName}</span>
                 </div>
+                {checkoutBooking.barberName && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Barber</span>
+                    <span className="font-semibold text-primary">{checkoutBooking.barberName}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Layanan</span>
                   <span className="font-semibold">{checkoutBooking.serviceName}</span>

@@ -48,3 +48,17 @@ export function appProfile() {
     "phone": "08123456789",
   }
 }
+
+export function formatWhatsAppNumber(phone: string): string {
+  if (!phone) return "";
+  let cleanPhone = phone.replace(/\D/g, "");
+  if (cleanPhone.startsWith("0")) {
+    cleanPhone = "62" + cleanPhone.substring(1);
+  }
+  return cleanPhone;
+}
+
+export function generateWhatsAppLink(phone: string, text: string): string {
+  const waNumber = formatWhatsAppNumber(phone);
+  return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+}

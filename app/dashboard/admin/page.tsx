@@ -13,7 +13,7 @@ import {
 
 type DashboardStats = {
   todayBookings: number;
-  completedBookings: number;
+  completedBookingsToday: number;
   topHaircuts: {
     serviceId: string;
     serviceName: string;
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
                 Booking Selesai
               </p>
               <p className="text-4xl font-black text-gray-900 dark:text-white mt-2">
-                {stats?.completedBookings ?? 0}
+                {stats?.completedBookingsToday ?? 0}
               </p>
             </div>
             <div className="bg-emerald-50 dark:bg-emerald-500/10 group-hover:bg-emerald-500 transition-colors duration-300 p-4 rounded-full">
