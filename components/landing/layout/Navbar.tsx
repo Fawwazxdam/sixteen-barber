@@ -27,7 +27,7 @@ export function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 h-20 px-8 dark:bg-neutral-900/90 dark:border-gray-700">
       <div className="max-w-7xl mx-auto flex justify-between items-center h-full">
         <Link href="/" className="text-2xl font-black tracking-tighter text-gray-900 uppercase dark:text-white">
-          GROOMER
+          MEMANGKAS
         </Link>
         <div className="hidden md:flex gap-8 items-center">
           <Link href="#features" className="font-inter uppercase tracking-widest text-sm font-bold text-amber-600 border-b-2 border-amber-600 pb-1 dark:text-amber-400 dark:border-amber-400">Features</Link>

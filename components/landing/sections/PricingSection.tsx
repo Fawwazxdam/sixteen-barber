@@ -14,7 +14,7 @@ const plans = [
       "Dashboard Admin Utama",
     ],
     buttonVariant: "outline" as const,
-    buttonText: "Pilih Starter",
+    buttonText: "Coba Gratis 14 Hari",
     isPopular: false,
   },
   {

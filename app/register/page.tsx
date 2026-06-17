@@ -80,8 +80,8 @@ function RegisterFormContent() {
     setLoading(true);
     try {
       await registerTenant({ tenant: tenantData, admin: adminData, planId: planParam });
-      toast.success("Registrasi berhasil! Silakan login.");
-      router.push("/login");
+      toast.success("Registrasi berhasil! Cek email untuk kode verifikasi.");
+      router.push(`/verify-email?email=${encodeURIComponent(adminData.email)}`);
     } catch (err: unknown) {
       const message = err instanceof ApiError ? err.message : "Registrasi gagal";
       toast.error(message);
@@ -255,7 +255,7 @@ function RegisterFormContent() {
                 disabled={loading}
                 className="w-full bg-amber-800 hover:bg-amber-900 text-white text-lg py-6 rounded-xl font-medium shadow-md transition-all disabled:opacity-70"
               >
-                {loading ? "Mendaftarkan..." : "Daftar & Lanjut Pembayaran"}
+                {loading ? "Mendaftarkan..." : planParam === "starter" ? "Daftar & Mulai Trial 14 Hari" : "Daftar & Lanjut Pembayaran"}
               </Button>
             </div>
           </form>

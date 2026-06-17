@@ -21,7 +21,7 @@ export function TenantFooter({ tenantName }: TenantFooterProps) {
 
         <div className="flex flex-wrap justify-center gap-6 md:gap-8">
           <span className="font-inter text-xs tracking-tight text-gray-400 uppercase">
-            Powered by GROOMER
+            Powered by MEMANGKAS
           </span>
         </div>
 

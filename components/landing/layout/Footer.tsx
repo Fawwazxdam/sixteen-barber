@@ -7,9 +7,9 @@ export function Footer() {
     <footer className="bg-white border-t border-gray-200 w-full py-12 px-8 dark:bg-neutral-900 dark:border-gray-700">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex flex-col gap-4 items-center md:items-start">
-          <div className="text-lg font-bold text-gray-900 uppercase dark:text-white">GROOMER</div>
+          <div className="text-lg font-bold text-gray-900 uppercase dark:text-white">MEMANGKAS</div>
           <p className="font-inter text-xs tracking-tight text-gray-500 uppercase dark:text-gray-400">
-            © {new Date().getFullYear()} GROOMER. PRECISION IN EVERY CUT.
+            © {new Date().getFullYear()} MEMANGKAS. PRECISION IN EVERY CUT.
           </p>
         </div>
         

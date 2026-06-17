@@ -34,3 +34,11 @@ export async function registerTenant(data: RegisterTenantRequest) {
   });
   return res;
 }
+
+export async function verifyEmail(email: string, token: string) {
+  const res = await apiFetch<null>("/onboarding/verify-email", {
+    method: "POST",
+    body: JSON.stringify({ email, token }),
+  });
+  return res;
+}
