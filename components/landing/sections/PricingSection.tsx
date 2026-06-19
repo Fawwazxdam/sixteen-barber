@@ -7,7 +7,7 @@ const plans = [
   {
     id: "starter",
     name: "Starter",
-    price: "99rb",
+    price: "-TBA-",
     features: [
       "Maksimal 2 Kapster",
       "Link Booking Mandiri",
@@ -20,7 +20,7 @@ const plans = [
   {
     id: "professional",
     name: "Professional",
-    price: "199rb",
+    price: "-TBA-",
     features: [
       "Maksimal 5 Kapster",
       "Notifikasi WhatsApp",
@@ -28,23 +28,23 @@ const plans = [
       "Laporan Pendapatan Harian",
     ],
     buttonVariant: "default" as const,
-    buttonText: "Mulai Langganan",
-    isPopular: true,
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    price: "399rb",
-    features: [
-      "Kapster Tanpa Batas",
-      "Dukungan Multi-Cabang",
-      "Custom Logo & Tema",
-      "Ekspor Laporan Excel/CSV",
-    ],
-    buttonVariant: "outline" as const,
-    buttonText: "Pilih Enterprise",
+    buttonText: "Coba Gratis 14 Hari",
     isPopular: false,
   },
+  // {
+  //   id: "enterprise",
+  //   name: "Enterprise",
+  //   price: "399rb",
+  //   features: [
+  //     "Kapster Tanpa Batas",
+  //     "Dukungan Multi-Cabang",
+  //     "Custom Logo & Tema",
+  //     "Ekspor Laporan Excel/CSV",
+  //   ],
+  //   buttonVariant: "outline" as const,
+  //   buttonText: "Pilih Enterprise",
+  //   isPopular: false,
+  // },
 ];
 
 export function PricingSection() {
@@ -59,7 +59,7 @@ export function PricingSection() {
             Investasi cerdas untuk pertumbuhan jangka panjang barbershop Anda.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {plans.map((plan, index) => (
             <div
               key={index}
