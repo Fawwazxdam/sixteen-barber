@@ -23,8 +23,11 @@ jobs:
         with:
           context: .
           push: true
-          # Mengarah ke repo barber-fe
           tags: ${{ secrets.DOCKER_USERNAME }}/barber-fe:latest
+          # --- TAMBAHKAN BAGIAN INI ---
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=http://<IP_VPS_KAMU>:4002
+          # ----------------------------
 
   deploy-to-vps:
     needs: build-and-push
