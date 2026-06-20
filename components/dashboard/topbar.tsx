@@ -8,7 +8,7 @@ interface User {
   id: string;
   name?: string;
   email?: string;
-  role: "ADMIN" | "BARBER";
+  role: "ADMIN" | "BARBER" | "SUPERADMIN";
 }
 
 export default function Topbar({ user }: { user: User }) {

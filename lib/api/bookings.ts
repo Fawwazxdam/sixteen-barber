@@ -54,7 +54,7 @@ export async function updateBookingStatus(
 }
 
 export async function getDashboardStats() {
-  return apiFetch<{ status: number; data: DashboardStats }>(
+  return apiFetch<DashboardStats>(
     "/bookings/dashboard/stats"
   );
 }
@@ -76,7 +76,7 @@ export type BarberDashboardStats = {
 };
 
 export async function getBarberDashboardStats(barberId: string) {
-  return apiFetch<{ status: number; data: BarberDashboardStats }>(
+  return apiFetch<BarberDashboardStats>(
     `/bookings/barber/dashboard/stats?barberId=${barberId}`
   );
 }
@@ -89,5 +89,5 @@ export async function getBarberBookingsByRange(
   let url = `/bookings/barber/range?barberId=${barberId}`;
   if (startDate) url += `&startDate=${startDate}`;
   if (endDate) url += `&endDate=${endDate}`;
-  return apiFetch<{ status: number; data: Booking[] }>(url);
+  return apiFetch<Booking[]>(url);
 }

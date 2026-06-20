@@ -8,7 +8,7 @@ import {
   BarberDashboardStats,
   Booking,
 } from "@/lib/api/bookings";
-import { getMe, UserResponse } from "@/lib/api/auth";
+import { getMe, MeResponse } from "@/lib/api/auth";
 import {
   Calendar,
   CheckCircle,
@@ -68,7 +68,7 @@ const formatHeaderDate = (dateStr: string) => {
 export default function BarberDashboard() {
   const [stats, setStats] = useState<BarberDashboardStats | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [user, setUser] = useState<UserResponse["user"] | null>(null);
+  const [user, setUser] = useState<MeResponse["user"] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>({});
@@ -342,7 +342,7 @@ export default function BarberDashboard() {
                             <div className="flex items-center gap-2">
                               <Scissors className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                                {booking.serviceName} - {idrFormat(booking.servicePrice)} ({booking.duration} menit)
+                                {booking.serviceName} - {idrFormat(booking.servicePrice || 0)} ({booking.duration} menit)
                               </span>
                             </div>
                           </div>

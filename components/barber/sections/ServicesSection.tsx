@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Scissors, Star, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
-import { idrFormat } from "../../lib/utils";
+import { idrFormat } from "@/lib/utils";
 import axios from "axios";
 
 interface Service {

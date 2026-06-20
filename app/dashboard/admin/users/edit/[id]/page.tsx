@@ -136,6 +136,7 @@ export default function EditBarberPage() {
   return (
     <div className="max-w-7xl animate-in fade-in duration-300">
       <PageHeader
+        title="Edit Barber"
         backHref="/dashboard/admin/users"
         backText="Kembali ke Daftar Barber"
       />

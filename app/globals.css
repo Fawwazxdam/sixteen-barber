@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@fontsource/inter";
+@import "@fontsource/playfair-display";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -54,6 +56,8 @@
 }
 
 :root {
+  --font-inter: "Inter", sans-serif;
+  --font-playfair: "Playfair Display", serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.25);

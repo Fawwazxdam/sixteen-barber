@@ -76,6 +76,7 @@ export default function EditServicePage() {
   return (
     <div className="max-w-7xl animate-in fade-in duration-300">
       <PageHeader
+        title="Edit Layanan"
         backHref="/dashboard/admin/services"
         backText="Kembali ke Daftar Layanan"
       />

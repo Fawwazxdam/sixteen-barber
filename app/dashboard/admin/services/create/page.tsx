@@ -44,6 +44,7 @@ export default function CreateServicePage() {
   return (
     <div className="max-w-7xl animate-in fade-in duration-300">
       <PageHeader
+        title="Tambah Layanan Baru"
         backHref="/dashboard/admin/services"
         backText="Kembali ke Daftar Layanan"
       />

@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Scissors } from "lucide-react";
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
 export const metadata: Metadata = {
@@ -34,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${inter.variable} antialiased font-inter bg-neutral-50 text-gray-900`}
+        className={`antialiased font-inter bg-neutral-50 text-gray-900`}
       >
         <Toaster position="top-right" />
         {children}

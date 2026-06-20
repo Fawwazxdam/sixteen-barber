@@ -1,15 +1,17 @@
 import { apiFetch } from "./client";
 import { Barber } from "@/types/users";
 
-export function getBarbers() {
-  return apiFetch<Barber[]>("/users/barbers");
+export async function getBarbers() {
+  const res = await apiFetch<Barber[]>("/users/barbers");
+  return res.data;
 }
 
-export function getBarber(id: string) {
-  return apiFetch<Barber>(`/users/barbers/${id}`);
+export async function getBarber(id: string) {
+  const res = await apiFetch<Barber>(`/users/barbers/${id}`);
+  return res.data;
 }
 
-export function createBarber(data: {
+export async function createBarber(data: {
   name: string;
   email: string;
   password: string;
@@ -31,14 +33,15 @@ export function createBarber(data: {
     formData.append("schedules", JSON.stringify(data.schedules));
   }
 
-  return apiFetch<Barber>("/users/barbers", {
+  const res = await apiFetch<Barber>("/users/barbers", {
     method: "POST",
     body: formData,
     multipart: true,
   });
+  return res.data;
 }
 
-export function updateBarber(
+export async function updateBarber(
   id: string,
   data: {
     name?: string;
@@ -57,21 +60,24 @@ export function updateBarber(
     formData.append("image", data.image);
   }
 
-  return apiFetch<Barber>(`/users/barbers/${id}`, {
+  const res = await apiFetch<Barber>(`/users/barbers/${id}`, {
     method: "PATCH",
     body: formData,
     multipart: true,
   });
+  return res.data;
 }
 
-export function deleteBarber(id: string) {
-  return apiFetch(`/users/barbers/${id}`, {
+export async function deleteBarber(id: string) {
+  const res = await apiFetch(`/users/barbers/${id}`, {
     method: "DELETE",
   });
+  return res.data;
 }
 
-export function getBarberMedia(barberId: string) {
-  return apiFetch<{ url: string }[]>(`/media?type=barber&referenceId=${barberId}`);
+export async function getBarberMedia(barberId: string) {
+  const res = await apiFetch<{ url: string }[]>(`/media?type=barber&referenceId=${barberId}`);
+  return res.data;
 }
 
 export interface BarberScheduleItem {

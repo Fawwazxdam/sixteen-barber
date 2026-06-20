@@ -1,10 +1,10 @@
-import { apiFetch, apiFetchServer } from "./client";
+import { apiFetch, apiFetchServer, ApiResponse } from "./client";
 
 export interface UserResponse {
   id: string;
   email: string;
   name: string;
-  role: "ADMIN" | "BARBER";
+  role: "ADMIN" | "BARBER" | "SUPERADMIN";
   tenantId?: string;
 }
 
@@ -35,12 +35,12 @@ export async function login(data: { email: string; password: string }) {
   });
 }
 
-export async function getMe(cookieHeader?: string) {
+export async function getMe(cookieHeader?: string): Promise<MeResponse> {
   if (cookieHeader) {
-    const result = await apiFetchServer<MeResponse>("/auth/me", cookieHeader);
-    return result;
+    return apiFetchServer<MeResponse>("/auth/me", cookieHeader);
   }
-  return apiFetch<MeResponse>("/auth/me");
+  const result = await apiFetch<MeResponse>("/auth/me");
+  return result as unknown as MeResponse;
 }
 
 export async function logout() {
