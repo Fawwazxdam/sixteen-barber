@@ -1,5 +1,17 @@
 // types/tenants.ts
 
+export type LandingPageContent = {
+  heroImage?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  tagline?: string;
+  aboutText?: string;
+  galleryImages?: string[];
+  ctaTitle?: string;
+  ctaDescription?: string;
+  ctaButtonText?: string;
+};
+
 export type Tenant = {
   id: string;
   name: string;
@@ -12,7 +24,7 @@ export type Tenant = {
   createdAt: string;
   updatedAt: string;
   hasActiveSubscription?: boolean;
-};
+} & LandingPageContent;
 
 export type CreateTenantData = {
   name: string;
@@ -25,6 +37,8 @@ export type CreateTenantData = {
 
 // Menggunakan tipe ini untuk form edit, karena slug tidak boleh diubah
 export type UpdateTenantData = Partial<Omit<CreateTenantData, "slug">>;
+
+export type UpdateLandingPageData = Partial<LandingPageContent>;
 
 // --- [OPSIONAL] ---
 // Kamu juga bisa menambahkan tipe untuk Stats di sini agar lebih rapi

@@ -4,6 +4,7 @@ import type {
   Tenant, 
   CreateTenantData, 
   UpdateTenantData, 
+  UpdateLandingPageData,
   TenantStats, 
   DashboardStats 
 } from "@/types/tenants";
@@ -63,4 +64,33 @@ export async function deleteTenant(id: string) {
     method: "DELETE",
   });
   return res.data; 
+}
+
+export async function updateLandingPage(id: string, data: UpdateLandingPageData) {
+  const res = await apiFetch<Tenant>(`/tenants/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+  return res.data;
+}
+
+export async function uploadLandingImage(
+  file: File,
+  type: "tenant-hero" | "tenant-gallery"
+) {
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("type", type);
+
+  const res = await apiFetch<{ id: string; url: string }>(
+    "/media/upload-landing",
+    { method: "POST", body: formData, multipart: true }
+  );
+
+  const rawUrl = res.data.url;
+  const fullUrl = rawUrl.startsWith("http")
+    ? rawUrl
+    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${rawUrl}`;
+
+  return { ...res.data, url: fullUrl };
 }

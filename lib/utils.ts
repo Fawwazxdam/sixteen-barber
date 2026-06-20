@@ -62,3 +62,9 @@ export function generateWhatsAppLink(phone: string, text: string): string {
   const waNumber = formatWhatsAppNumber(phone);
   return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
 }
+
+export function resolveImageUrl(url: string | undefined | null): string {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  return `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`;
+}

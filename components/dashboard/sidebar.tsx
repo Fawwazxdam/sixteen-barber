@@ -11,7 +11,8 @@ import {
   LogOut,
   ShieldAlert,
   Store,
-  CreditCard
+  CreditCard,
+  Globe
 } from "lucide-react";
 
 const navMain = [
@@ -29,6 +30,11 @@ const navBarber = [
 ];
 
 const navSystem = [
+  {
+    href: "/dashboard/admin/landing-page",
+    label: "Landing Page",
+    icon: Globe,
+  },
   {
     href: "/dashboard/admin/billing",
     label: "Langganan",
