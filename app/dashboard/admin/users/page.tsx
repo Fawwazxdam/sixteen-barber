@@ -14,7 +14,10 @@ export default function UsersPage() {
 
   useEffect(() => {
     getBarbers()
-      .then((data) => setBarbers(data))
+      .then((data) => {
+        console.log("API response data:", data);
+        setBarbers(data ?? []);
+      })
       .finally(() => setLoading(false));
   }, []);
   console.log({barbers})

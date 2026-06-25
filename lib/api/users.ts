@@ -1,9 +1,9 @@
 import { apiFetch } from "./client";
 import { Barber } from "@/types/users";
 
-export async function getBarbers() {
-  const res = await apiFetch<Barber[]>("/users/barbers");
-  return res.data;
+export async function getBarbers(): Promise<Barber[]> {
+  const res = await apiFetch<Barber[] | { data: Barber[] }>("/users/barbers");
+  return Array.isArray(res) ? res : res.data ?? [];
 }
 
 export async function getBarber(id: string) {
