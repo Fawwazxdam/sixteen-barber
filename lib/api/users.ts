@@ -3,7 +3,8 @@ import { Barber } from "@/types/users";
 
 export async function getBarbers(): Promise<Barber[]> {
   const res = await apiFetch<Barber[] | { data: Barber[] }>("/users/barbers");
-  return Array.isArray(res) ? res : res.data ?? [];
+  const payload = res.data;
+  return Array.isArray(payload) ? payload : (payload && 'data' in payload ? payload.data : []);
 }
 
 export async function getBarber(id: string) {
