@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { Scissors } from "lucide-react";
 const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
 export const metadata: Metadata = {
@@ -22,9 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased font-inter bg-neutral-50 text-gray-900`}
-      >
+      <body className="antialiased font-inter bg-neutral-50 text-gray-900">
         <Toaster position="top-right" />
         {children}
       </body>

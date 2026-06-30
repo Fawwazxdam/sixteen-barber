@@ -6,6 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 export function HeroSection() {
+  const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'app.memangkas.test';
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden py-32 bg-neutral-100 dark:bg-neutral-800">
       <div className="max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-12 items-center">
@@ -18,14 +20,14 @@ export function HeroSection() {
           <span className="inline-block text-amber-600 font-semibold text-xs uppercase tracking-widest mb-4 dark:text-amber-400">
             Solusi Manajemen Barbershop
           </span>
-          <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 leading-tight tracking-tight dark:text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 mb-6 leading-tight tracking-tight dark:text-white">
             Fokus Cukur Rambutnya, Biar Kami yang Urus Manajemennya.
           </h1>
           <p className="text-gray-600 text-lg mb-10 max-w-lg leading-relaxed dark:text-gray-400">
             Sistem kasir, reservasi online, dan manajemen kapster dalam satu aplikasi praktis untuk barbershop modern.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/register">
+            <Link href={`https://${appDomain}/register`}>
               <Button size="lg">Mulai Coba Gratis 14 Hari</Button>
             </Link>
             <Button variant="outline" size="lg">Lihat Demo</Button>

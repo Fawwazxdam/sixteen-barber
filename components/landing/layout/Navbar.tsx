@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { Button } from "@/components/landing/ui/Button";
 
 export function Navbar() {
+  const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'app.memangkas.test';
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -30,9 +32,9 @@ export function Navbar() {
           MEMANGKAS
         </Link>
         <div className="hidden md:flex gap-8 items-center">
-          <Link href="#features" className="font-inter uppercase tracking-widest text-sm font-bold text-amber-600 border-b-2 border-amber-600 pb-1 dark:text-amber-400 dark:border-amber-400">Features</Link>
-          <Link href="#pricing" className="font-inter uppercase tracking-widest text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors dark:text-gray-400 dark:hover:text-white">Pricing</Link>
-          <Link href="#contact" className="font-inter uppercase tracking-widest text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors dark:text-gray-400 dark:hover:text-white">Contact</Link>
+          <Link href="#features" className="font-inter uppercase tracking-wide text-sm font-bold text-amber-600 border-b-2 border-amber-600 pb-1 dark:text-amber-400 dark:border-amber-400">Features</Link>
+          <Link href="#pricing" className="font-inter uppercase tracking-wide text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors dark:text-gray-400 dark:hover:text-white">Pricing</Link>
+          <Link href="#contact" className="font-inter uppercase tracking-wide text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors dark:text-gray-400 dark:hover:text-white">Contact</Link>
         </div>
         <div className="flex items-center gap-4">
           <button
@@ -47,10 +49,10 @@ export function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
-          <Link href="/login">
+          <Link href={`https://${appDomain}/login`}>
              <Button variant="ghost">Login</Button>
            </Link>
-          <Link href="/register">
+          <Link href={`https://${appDomain}/register`}>
              <Button>Get Started</Button>
            </Link>
         </div>

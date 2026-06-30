@@ -2,13 +2,15 @@ import { apiFetch } from "./client";
 import { Barber } from "@/types/users";
 
 export async function getBarbers(): Promise<Barber[]> {
-  const res = await apiFetch<Barber[] | { data: Barber[] }>("/users/barbers");
-  return Array.isArray(res) ? res : res.data ?? [];
+  const res = await apiFetch<Barber[]>("/users/barbers");
+  if (Array.isArray(res)) return res;
+  return (res as any)?.data ?? [];
 }
 
 export async function getBarber(id: string) {
   const res = await apiFetch<Barber>(`/users/barbers/${id}`);
-  return res.data;
+  if (res && typeof res === 'object' && 'data' in res) return (res as any).data;
+  return res;
 }
 
 export async function createBarber(data: {

@@ -6,6 +6,7 @@ import Link from 'next/link';
 const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
 export default function Header() {
+  const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'app.memangkas.test';
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-linear-to-r from-amber-950 via-amber-900 to-amber-950 backdrop-blur-sm border-b border-amber-200/50 shadow-sm">
       <div className="mx-auto max-w-7xl px-6 py-4">

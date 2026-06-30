@@ -1,10 +1,7 @@
-// src/app/page.tsx
 import { Navbar } from "@/components/landing/layout/Navbar";
-// Anggap komponen section lain sudah kamu buat memisahkan dari HTML
-import { HeroSection } from "@/components/landing/sections/HeroSection"; 
+import { HeroSection } from "@/components/landing/sections/HeroSection";
 import { FeaturesSection } from "@/components/landing/sections/FeaturesSection";
 import { PricingSection } from "@/components/landing/sections/PricingSection";
-// import { CtaSection } from "@/components/sections/CtaSection";
 import { Footer } from "@/components/landing/layout/Footer";
 
 export default function LandingPage() {
@@ -16,7 +13,6 @@ export default function LandingPage() {
         <HeroSection />
         <FeaturesSection />
         <PricingSection />
-        {/* <CtaSection /> */}
       </main>
 
       <Footer />

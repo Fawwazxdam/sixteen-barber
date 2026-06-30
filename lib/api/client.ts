@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4002';
 
 export class ApiError extends Error {
   constructor(
@@ -14,6 +15,10 @@ export class ApiError extends Error {
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
+});
+
+const apiClientServer = axios.create({
+  baseURL: BACKEND_URL,
 });
 
 interface ApiFetchOptions extends AxiosRequestConfig {
@@ -33,14 +38,11 @@ export async function apiFetch<T>(
 ): Promise<ApiResponse<T>> {
   const { body, multipart, ...config } = options;
 
-  // Build headers
   const headers: Record<string, string> = {
     ...config.headers as Record<string, string>,
   };
 
-  // Handle multipart/form-data - let browser set Content-Type with boundary
   if (multipart && body instanceof FormData) {
-    // Don't set Content-Type, let browser auto-set with boundary
   } else if (!headers["Content-Type"]) {
     headers["Content-Type"] = "application/json";
   }
@@ -67,7 +69,6 @@ export async function apiFetch<T>(
   }
 }
 
-// For server-side calls, pass cookie explicitly
 export async function apiFetchServer<T>(
   endpoint: string,
   cookieHeader: string,
@@ -86,7 +87,43 @@ export async function apiFetchServer<T>(
   }
 
   try {
-    const response = await apiClient({
+    const response = await apiClientServer({
+      url: endpoint,
+      method: config.method || "GET",
+      data: body || config.data,
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status ?? 0;
+      const message =
+        error.response?.data?.message || error.message || "API Error";
+      const data = error.response?.data;
+
+      throw new ApiError(message, status, data);
+    }
+    throw new ApiError("Network error", 0);
+  }
+}
+
+export async function apiFetchPublicServer<T>(
+  endpoint: string,
+  options: ApiFetchOptions = {}
+): Promise<T> {
+  const { body, multipart, ...config } = options;
+
+  const headers: Record<string, string> = {
+    ...config.headers as Record<string, string>,
+  };
+
+  if (multipart && body instanceof FormData) {
+  } else if (!headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  try {
+    const response = await apiClientServer({
       url: endpoint,
       method: config.method || "GET",
       data: body || config.data,

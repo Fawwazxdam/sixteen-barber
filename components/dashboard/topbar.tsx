@@ -2,7 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/api/auth";
-import { Bell, ChevronDown, LogOut, Sun, Moon } from "lucide-react";
+import { Bell, ChevronDown, LogOut, Sun, Moon, Menu } from "lucide-react";
+import { useMobileSidebar } from "./mobile-sidebar-provider";
 
 interface User {
   id: string;
@@ -16,6 +17,7 @@ export default function Topbar({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { setIsOpen: setMobileSidebarOpen } = useMobileSidebar();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
@@ -63,7 +65,19 @@ export default function Topbar({ user }: { user: User }) {
   const roleLabel = user.role === "ADMIN" ? "Admin" : "Barber";
 
   return (
-    <header className="h-14 bg-white dark:bg-neutral-900 border-b border-amber-100 dark:border-neutral-800 flex items-center justify-end px-5 sticky top-0 z-50 flex-shrink-0 transition-colors duration-300">
+    <header className="h-14 bg-white dark:bg-neutral-900 border-b border-amber-100 dark:border-neutral-800 flex items-center justify-between px-5 sticky top-0 z-50 flex-shrink-0 transition-colors duration-300">
+      <div className="flex items-center gap-2">
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setMobileSidebarOpen(true)}
+          className="md:hidden w-[34px] h-[34px] rounded-lg flex items-center justify-center
+          text-amber-800 dark:text-neutral-400 border border-transparent
+          hover:bg-amber-50 dark:hover:bg-neutral-800 hover:border-amber-100 dark:hover:border-neutral-700
+          active:scale-90 transition-all duration-200"
+        >
+          <Menu className="w-5 h-5" strokeWidth={1.75} />
+        </button>
+      </div>
       <div className="flex items-center gap-2">
         {/* Notification bell */}
         <button

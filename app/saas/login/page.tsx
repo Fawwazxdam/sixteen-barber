@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { Scissors, ArrowLeft } from "lucide-react";
 import Input from "@/components/barber/ui/Input";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/landing/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const appName = process.env.NEXT_PUBLIC_APP_NAME;
+  const mainDomain = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'memangkas.test';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,20 +33,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-amber-50 via-yellow-50 to-orange-100 relative px-6">
-      <div
-        className="absolute inset-0 opacity-20 pointer-events-none"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-        }}
-      >
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 relative px-6">
+      <div className="sticky top-0 w-full h-20 bg-white/90 backdrop-blur-md border-b border-gray-200 dark:bg-neutral-900/90 dark:border-gray-700 flex items-center px-8 z-10">
+        <Link href={`https://${mainDomain}`} className="text-2xl font-black tracking-tighter text-gray-900 uppercase dark:text-white">
+          MEMANGKAS
+        </Link>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md mx-auto relative z-10 py-8">
         <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-amber-800 hover:text-amber-900 mb-6 font-medium transition-colors"
+          href={`https://${mainDomain}`}
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 font-inter text-sm font-bold uppercase tracking-wide transition-colors dark:text-gray-400 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Beranda
@@ -53,16 +51,16 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-amber-200/50"
+          className="bg-white p-10 border border-gray-200 shadow-sm dark:bg-neutral-900 dark:border-gray-700"
         >
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-              <Scissors className="w-8 h-8 text-amber-800" />
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-16 h-16 bg-amber-50 flex items-center justify-center mb-6 dark:bg-neutral-800">
+              <Scissors className="w-8 h-8 text-amber-600 dark:text-amber-400" />
             </div>
-            <h1 className="text-3xl font-bold text-amber-900 font-playfair text-center">
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight dark:text-white">
               Login
             </h1>
-            <p className="text-amber-700 mt-2 text-center">
+            <p className="text-gray-600 mt-3 text-center dark:text-gray-400">
               Masuk untuk mengelola {appName}
             </p>
           </div>
@@ -85,18 +83,29 @@ export default function LoginPage() {
               required
             />
 
-            <div className="pt-2">
+            <div className="pt-4">
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-amber-800 hover:bg-amber-900 text-white text-lg py-6 rounded-xl font-medium shadow-md transition-all disabled:opacity-70"
+                className="w-full py-4 text-sm"
               >
                 {loading ? "Memproses..." : "Masuk"}
               </Button>
             </div>
           </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Belum punya akun?{" "}
+              <Link href="/register" className="text-amber-600 hover:text-amber-700 font-bold dark:text-amber-400 dark:hover:text-amber-300">
+                Daftar Sekarang
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
+
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 blur-[120px] -z-10 rounded-full dark:bg-amber-500/5" />
     </div>
   );
 }

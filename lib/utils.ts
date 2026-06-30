@@ -66,5 +66,6 @@ export function generateWhatsAppLink(phone: string, text: string): string {
 export function resolveImageUrl(url: string | undefined | null): string {
   if (!url) return "";
   if (url.startsWith("http")) return url;
+  if (url.startsWith("/api/")) return url;
   return `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`;
 }

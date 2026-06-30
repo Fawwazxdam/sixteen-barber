@@ -8,16 +8,16 @@ export function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex flex-col gap-4 items-center md:items-start">
           <div className="text-lg font-bold text-gray-900 uppercase dark:text-white">MEMANGKAS</div>
-          <p className="font-inter text-xs tracking-tight text-gray-500 uppercase dark:text-gray-400">
+          <p className="font-inter text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
             © {new Date().getFullYear()} MEMANGKAS. PRECISION IN EVERY CUT.
           </p>
         </div>
         
         <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-          <Link href="#" className="font-inter text-xs tracking-tight text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Privacy Policy</Link>
-          <Link href="#" className="font-inter text-xs tracking-tight text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Terms of Service</Link>
-          <Link href="#" className="font-inter text-xs tracking-tight text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Cookie Settings</Link>
-          <Link href="#" className="font-inter text-xs tracking-tight text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Support</Link>
+          <Link href="#" className="font-inter text-xs tracking-wide text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Privacy Policy</Link>
+          <Link href="#" className="font-inter text-xs tracking-wide text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Terms of Service</Link>
+          <Link href="#" className="font-inter text-xs tracking-wide text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Cookie Settings</Link>
+          <Link href="#" className="font-inter text-xs tracking-wide text-gray-500 hover:text-amber-600 transition-colors uppercase dark:text-gray-400 dark:hover:text-amber-400">Support</Link>
         </div>
 
         <div className="flex gap-4">

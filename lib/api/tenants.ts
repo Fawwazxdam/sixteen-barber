@@ -1,5 +1,5 @@
 // lib/api/tenants.ts (atau lib/api/tenant.ts)
-import { apiFetch } from "./client";
+import { apiFetch, apiFetchPublicServer } from "./client";
 import type { 
   Tenant, 
   CreateTenantData, 
@@ -28,7 +28,7 @@ export async function getCurrentTenant() {
 }
 
 export async function getTenantBySlug(slug: string) {
-  const res = await apiFetch<Tenant>(`/tenants/slug/${slug}`);
+  const res = await apiFetchPublicServer<{ status: number; message: string; data: Tenant }>(`/tenants/slug/${slug}`);
   return res.data;
 }
 
@@ -87,10 +87,5 @@ export async function uploadLandingImage(
     { method: "POST", body: formData, multipart: true }
   );
 
-  const rawUrl = res.data.url;
-  const fullUrl = rawUrl.startsWith("http")
-    ? rawUrl
-    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${rawUrl}`;
-
-  return { ...res.data, url: fullUrl };
+  return res.data;
 }

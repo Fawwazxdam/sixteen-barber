@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { Scissors, ArrowLeft, Building2, User, Clock } from "lucide-react";
 import Input from "@/components/barber/ui/Input";
 import Textarea from "@/components/barber/ui/Textarea";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/landing/ui/Button";
 import Link from "next/link";
 
 type TenantFormData = {
@@ -62,6 +62,7 @@ function RegisterFormContent() {
   });
   const [loading, setLoading] = useState(false);
   const appName = process.env.NEXT_PUBLIC_APP_NAME || "Sixteen Barber";
+  const mainDomain = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'memangkas.test';
 
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan") || "starter";
@@ -91,59 +92,55 @@ function RegisterFormContent() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 via-yellow-50 to-orange-100 relative px-6 py-12">
-      <div
-        className="absolute inset-0 opacity-20 pointer-events-none"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-        }}
-      >
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 relative px-6">
+      <div className="sticky top-0 w-full h-20 bg-white/90 backdrop-blur-md border-b border-gray-200 dark:bg-neutral-900/90 dark:border-gray-700 flex items-center px-8 z-10">
+        <Link href={`https://${mainDomain}`} className="text-2xl font-black tracking-tighter text-gray-900 uppercase dark:text-white">
+          MEMANGKAS
+        </Link>
       </div>
 
-      <div className="max-w-3xl mx-auto relative z-10">
+      <div className="max-w-3xl mx-auto relative z-10 py-8">
         <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-amber-800 hover:text-amber-900 mb-6 font-medium transition-colors"
+          href={`https://${mainDomain}`}
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 font-inter text-sm font-bold uppercase tracking-wide transition-colors dark:text-gray-400 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Beranda
         </Link>
 
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-amber-200/50">
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-              <Scissors className="w-8 h-8 text-amber-800" />
+        <div className="bg-white p-10 border border-gray-200 shadow-sm dark:bg-neutral-900 dark:border-gray-700">
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-16 h-16 bg-amber-50 flex items-center justify-center mb-6 dark:bg-neutral-800">
+              <Scissors className="w-8 h-8 text-amber-600 dark:text-amber-400" />
             </div>
-            <h1 className="text-3xl font-bold text-amber-900 font-playfair text-center">
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight dark:text-white">
               Daftar Barbershop
             </h1>
-            <p className="text-amber-700 mt-2 text-center">
+            <p className="text-gray-600 mt-3 text-center dark:text-gray-400">
               Buat akun admin untuk {appName}
             </p>
           </div>
 
-          {/* Plan Summary Section */}
-          <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-            <h3 className="text-sm font-semibold text-amber-900 uppercase tracking-wider mb-2">Ringkasan Pesanan</h3>
+          <div className="mb-8 p-6 bg-amber-50 border border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/20">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 dark:text-gray-400">Ringkasan Pesanan</h3>
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-bold text-lg text-gray-900">{selectedPlan.name}</p>
-                <p className="text-sm text-gray-600 mt-1">{selectedPlan.description}</p>
+                <p className="font-bold text-lg text-gray-900 dark:text-white">{selectedPlan.name}</p>
+                <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">{selectedPlan.description}</p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-amber-700 text-lg">{selectedPlan.price}</p>
+                <p className="font-bold text-amber-600 text-lg dark:text-amber-400">{selectedPlan.price}</p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-10">
             <div>
-              <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
-                <Building2 className="w-5 h-5" />
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 flex items-center gap-2 dark:text-gray-400">
+                <Building2 className="w-4 h-4" />
                 Informasi Barbershop
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="md:col-span-2">
                   <Input
                     label="Nama Barbershop"
@@ -161,7 +158,7 @@ function RegisterFormContent() {
                     onChange={handleTenantChange("slug")}
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">Digunakan untuk URL: {appName.toLowerCase().replace(/\s+/g, '')}.com/{tenantData.slug || "nama-barbershop"}</p>
+                  <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Digunakan untuk URL: {appName.toLowerCase().replace(/\s+/g, '')}.com/{tenantData.slug || "nama-barbershop"}</p>
                 </div>
                 <div>
                   <Input
@@ -183,28 +180,28 @@ function RegisterFormContent() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-amber-900 mb-1">Jam Buka</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 dark:text-gray-300">Jam Buka</label>
                   <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600" />
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="time"
                       value={tenantData.openTime}
                       onChange={handleTenantChange("openTime")}
                       required
-                      className="w-full pl-10 pr-4 py-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors bg-white text-amber-900"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors bg-white text-gray-900 dark:bg-neutral-800 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-amber-900 mb-1">Jam Tutup</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 dark:text-gray-300">Jam Tutup</label>
                   <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600" />
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="time"
                       value={tenantData.closeTime}
                       onChange={handleTenantChange("closeTime")}
                       required
-                      className="w-full pl-10 pr-4 py-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors bg-white text-amber-900"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors bg-white text-gray-900 dark:bg-neutral-800 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                 </div>
@@ -212,11 +209,11 @@ function RegisterFormContent() {
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
-                <User className="w-5 h-5" />
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 flex items-center gap-2 dark:text-gray-400">
+                <User className="w-4 h-4" />
                 Informasi Admin
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <Input
                     label="Nama Admin"
@@ -253,21 +250,32 @@ function RegisterFormContent() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-amber-800 hover:bg-amber-900 text-white text-lg py-6 rounded-xl font-medium shadow-md transition-all disabled:opacity-70"
+                className="w-full py-4 text-sm"
               >
                 {loading ? "Mendaftarkan..." : planParam === "starter" ? "Daftar & Mulai Trial 14 Hari" : "Daftar & Lanjut Pembayaran"}
               </Button>
             </div>
           </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Sudah punya akun?{" "}
+              <Link href="/login" className="text-amber-600 hover:text-amber-700 font-bold dark:text-amber-400 dark:hover:text-amber-300">
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
+
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 blur-[120px] -z-10 rounded-full dark:bg-amber-500/5" />
     </div>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-amber-50">Loading form...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-900">Loading form...</div>}>
       <RegisterFormContent />
     </Suspense>
   );

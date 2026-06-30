@@ -12,8 +12,10 @@ import {
   ShieldAlert,
   Store,
   CreditCard,
-  Globe
+  Globe,
+  X,
 } from "lucide-react";
+import { useMobileSidebar } from "./mobile-sidebar-provider";
 
 const navMain = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -50,11 +52,13 @@ const navSystem = [
 const navSuperAdmin = [
   { href: "/superadmin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/superadmin/tenants", label: "Barbershops", icon: Store },
+  { href: "/superadmin/plans", label: "Paket Layanan", icon: Globe },
   { href: "/superadmin/transactions", label: "Transaksi", icon: CreditCard },
 ];
 
 export default function Sidebar({ role }: { role: string }) {
   const pathname = usePathname();
+  const { isOpen, setIsOpen } = useMobileSidebar();
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -70,23 +74,8 @@ export default function Sidebar({ role }: { role: string }) {
     return pathname.startsWith(href);
   };
 
-  return (
-    <aside className="w-56 bg-yellow-950 dark:bg-neutral-900 flex flex-col border-r border-amber-900/20 dark:border-neutral-800 hidden md:flex transition-colors duration-300">
-      {/* Logo */}
-      <div className="p-5 flex items-center gap-3 border-b border-amber-900/20 dark:border-neutral-800">
-        <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
-          <Scissors className="w-4 h-4 text-white" strokeWidth={2} />
-        </div>
-        <div>
-          <p className="font-black text-white text-sm font-syne leading-tight tracking-tight">
-            Sixteen
-          </p>
-          <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
-            Barbershop
-          </p>
-        </div>
-      </div>
-
+  const navContent = (
+    <>
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
         {/* Utama */}
@@ -184,7 +173,64 @@ export default function Sidebar({ role }: { role: string }) {
           Keluar
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="w-56 bg-yellow-950 dark:bg-neutral-900 flex flex-col border-r border-amber-900/20 dark:border-neutral-800 hidden md:flex transition-colors duration-300">
+        {/* Logo */}
+        <div className="p-5 flex items-center gap-3 border-b border-amber-900/20 dark:border-neutral-800">
+          <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Scissors className="w-4 h-4 text-white" strokeWidth={2} />
+          </div>
+          <div>
+            <p className="font-black text-white text-sm font-syne leading-tight tracking-tight">
+              Sixteen
+            </p>
+            <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
+              Barbershop
+            </p>
+          </div>
+        </div>
+        {navContent}
+      </aside>
+
+      {/* Mobile sidebar overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => setIsOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-yellow-950 dark:bg-neutral-900 flex flex-col border-r border-amber-900/20 dark:border-neutral-800 transition-colors duration-300 animate-in slide-in-from-left duration-200">
+            <div className="p-5 flex items-center justify-between border-b border-amber-900/20 dark:border-neutral-800">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Scissors className="w-4 h-4 text-white" strokeWidth={2} />
+                </div>
+                <div>
+                  <p className="font-black text-white text-sm font-syne leading-tight tracking-tight">
+                    Sixteen
+                  </p>
+                  <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
+                    Barbershop
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-amber-100/50 hover:text-white hover:bg-white/10 active:scale-90 transition-all duration-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            {navContent}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -199,9 +245,12 @@ function NavLink({
   icon: React.ElementType;
   active: boolean;
 }) {
+  const { setIsOpen } = useMobileSidebar();
+
   return (
     <Link
       href={href}
+      onClick={() => setIsOpen(false)}
       className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium
         border transition-all duration-200
         ${active

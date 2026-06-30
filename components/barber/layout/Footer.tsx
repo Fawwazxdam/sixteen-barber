@@ -6,6 +6,7 @@ import { appProfile } from "@/lib/utils";
 
 export default function Footer() {
   const profile = appProfile();
+  const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'app.memangkas.test';
 
   return (
     <footer className="bg-linear-to-r from-amber-950 via-amber-900 to-amber-950 text-white px-6 py-12 border-t border-amber-800/50 relative">
@@ -56,7 +57,7 @@ export default function Footer() {
           </p>
           {/* Hidden admin login link - for internal use only */}
           <Link
-            href="/login"
+            href={`https://${appDomain}/login`}
             className="inline-block mt-2 text-amber-500 hover:text-amber-700 text-xs transition-colors"
           >
             <LogIn className="inline-block mr-1" /> - <UserCheck className="inline-block mr-1" />
